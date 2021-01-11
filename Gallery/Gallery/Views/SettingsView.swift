@@ -15,7 +15,7 @@ struct SettingsView: View {
         Form {
             Section(header: Text("Accounts")) {
                 ForEach(accounts) { account in
-                    Text(account.username ?? "")
+                    TextWithCaption(account.username ?? "", caption: account.baseURL)
                 }
                 
                 NavigationLink("Add new account", destination: Text("lol"))
