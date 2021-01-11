@@ -13,6 +13,8 @@
 		59342C1225AD0819000BD333 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 59342C1125AD0819000BD333 /* Preview Assets.xcassets */; };
 		59342C1425AD0819000BD333 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59342C1325AD0819000BD333 /* Persistence.swift */; };
 		59342C2825AD0892000BD333 /* Gallery.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 59342C2625AD0892000BD333 /* Gallery.xcdatamodeld */; };
+		59342C2B25AD092A000BD333 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59342C2A25AD092A000BD333 /* SettingsView.swift */; };
+		59342C2E25AD0951000BD333 /* GalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59342C2D25AD0951000BD333 /* GalleryView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +26,8 @@
 		59342C1325AD0819000BD333 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		59342C1825AD0819000BD333 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		59342C2725AD0892000BD333 /* Gallery.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Gallery.xcdatamodel; sourceTree = "<group>"; };
+		59342C2A25AD092A000BD333 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		59342C2D25AD0951000BD333 /* GalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +83,8 @@
 			isa = PBXGroup;
 			children = (
 				59342C0C25AD0817000BD333 /* ContentView.swift */,
+				59342C2D25AD0951000BD333 /* GalleryView.swift */,
+				59342C2A25AD092A000BD333 /* SettingsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -168,6 +174,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59342C2B25AD092A000BD333 /* SettingsView.swift in Sources */,
+				59342C2E25AD0951000BD333 /* GalleryView.swift in Sources */,
 				59342C2825AD0892000BD333 /* Gallery.xcdatamodeld in Sources */,
 				59342C1425AD0819000BD333 /* Persistence.swift in Sources */,
 				59342C0D25AD0817000BD333 /* ContentView.swift in Sources */,
