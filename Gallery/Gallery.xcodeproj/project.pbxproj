@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -15,6 +15,7 @@
 		59342C2825AD0892000BD333 /* Gallery.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 59342C2625AD0892000BD333 /* Gallery.xcdatamodeld */; };
 		59342C2B25AD092A000BD333 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59342C2A25AD092A000BD333 /* SettingsView.swift */; };
 		59342C2E25AD0951000BD333 /* GalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59342C2D25AD0951000BD333 /* GalleryView.swift */; };
+		59342C3225AD0A30000BD333 /* WebDAV in Frameworks */ = {isa = PBXBuildFile; productRef = 59342C3125AD0A30000BD333 /* WebDAV */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59342C3225AD0A30000BD333 /* WebDAV in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -121,6 +123,9 @@
 			dependencies = (
 			);
 			name = Gallery;
+			packageProductDependencies = (
+				59342C3125AD0A30000BD333 /* WebDAV */,
+			);
 			productName = Gallery;
 			productReference = 59342C0725AD0817000BD333 /* Gallery.app */;
 			productType = "com.apple.product-type.application";
@@ -148,6 +153,9 @@
 				Base,
 			);
 			mainGroup = 59342BFE25AD0817000BD333;
+			packageReferences = (
+				59342C3025AD0A30000BD333 /* XCRemoteSwiftPackageReference "WebDAV-Swift" */,
+			);
 			productRefGroup = 59342C0825AD0817000BD333 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -368,6 +376,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		59342C3025AD0A30000BD333 /* XCRemoteSwiftPackageReference "WebDAV-Swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Isvvc/WebDAV-Swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		59342C3125AD0A30000BD333 /* WebDAV */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 59342C3025AD0A30000BD333 /* XCRemoteSwiftPackageReference "WebDAV-Swift" */;
+			productName = WebDAV;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		59342C2625AD0892000BD333 /* Gallery.xcdatamodeld */ = {
