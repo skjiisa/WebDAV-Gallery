@@ -9,7 +9,7 @@ import SwiftUI
 
 struct GalleryView: View {
     
-    @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.managedObjectContext) private var moc
     
     @State private var showingSettings = false
     
@@ -33,7 +33,7 @@ struct GalleryView: View {
                             }
                         }
                 }
-                .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+                .environment(\.managedObjectContext, moc)
             }
         }
     }

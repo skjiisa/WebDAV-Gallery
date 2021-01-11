@@ -9,8 +9,18 @@ import SwiftUI
 
 struct SettingsView: View {
     
+    @FetchRequest(entity: Account.entity(), sortDescriptors: [NSSortDescriptor(key: "username", ascending: true)]) private var accounts: FetchedResults<Account>
+    
     var body: some View {
         Form {
+            Section(header: Text("Accounts")) {
+                ForEach(accounts) { account in
+                    Text(account.username ?? "")
+                }
+                
+                NavigationLink("Add new account", destination: Text("lol"))
+            }
+            
             Text("Hello, World!")
         }
         .navigationTitle("Settings")
