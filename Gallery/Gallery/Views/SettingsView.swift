@@ -9,16 +9,35 @@ import SwiftUI
 
 struct SettingsView: View {
     
-    @FetchRequest(entity: Account.entity(), sortDescriptors: [NSSortDescriptor(key: "username", ascending: true)]) private var accounts: FetchedResults<Account>
+    @Environment(\.managedObjectContext) private var moc
+    
+    @FetchRequest(
+        entity: Account.entity(),
+        sortDescriptors: [NSSortDescriptor(key: "username", ascending: true)],
+        animation: .default)
+    private var accounts: FetchedResults<Account>
+    
+    @State private var accountSelection: Account?
     
     var body: some View {
         Form {
             Section(header: Text("Accounts")) {
                 ForEach(accounts) { account in
-                    TextWithCaption(account.username ?? "", caption: account.baseURL)
+                    NavigationLink(
+                        destination: AccountView(account: account, accountSelection: $accountSelection),
+                        tag: account,
+                        selection: $accountSelection) {
+                        TextWithCaption(account.username ?? "New Account", caption: account.baseURL)
+                            .foregroundColor(account.username == nil ? .secondary : .primary)
+                    }
                 }
                 
-                NavigationLink("Add new account", destination: Text("lol"))
+                Button("Add new account") {
+                    let account = Account(context: moc)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        accountSelection = account
+                    }
+                }
             }
             
             Text("Hello, World!")

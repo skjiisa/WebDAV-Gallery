@@ -15,6 +15,7 @@ class WebDAVController: ObservableObject {
     func testLogin(account: Account, password: String, completion: @escaping (WebDAVError?) -> Void) {
         webDAV.listFiles(atPath: "/", account: account, password: password) { files, error in
             completion(error)
+            //TODO: Save password to keychain if no error
         }
     }
     
