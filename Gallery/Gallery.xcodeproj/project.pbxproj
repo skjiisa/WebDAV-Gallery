@@ -20,6 +20,7 @@
 		59342C3925AD0C90000BD333 /* TextWithCaption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59342C3825AD0C90000BD333 /* TextWithCaption.swift */; };
 		59342C3E25AD13B1000BD333 /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59342C3D25AD13B1000BD333 /* AccountView.swift */; };
 		59342C4125AD1437000BD333 /* WebDAVController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59342C4025AD1437000BD333 /* WebDAVController.swift */; };
+		59E3056225AE558B00BB855D /* AlertItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E3056125AE558B00BB855D /* AlertItem.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +38,7 @@
 		59342C3825AD0C90000BD333 /* TextWithCaption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextWithCaption.swift; sourceTree = "<group>"; };
 		59342C3D25AD13B1000BD333 /* AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountView.swift; sourceTree = "<group>"; };
 		59342C4025AD1437000BD333 /* WebDAVController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebDAVController.swift; sourceTree = "<group>"; };
+		59E3056125AE558B00BB855D /* AlertItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,6 +125,7 @@
 			isa = PBXGroup;
 			children = (
 				59342C3825AD0C90000BD333 /* TextWithCaption.swift */,
+				59E3056125AE558B00BB855D /* AlertItem.swift */,
 			);
 			path = "Supplemental Views";
 			sourceTree = "<group>";
@@ -211,6 +214,7 @@
 				59342C0B25AD0817000BD333 /* GalleryApp.swift in Sources */,
 				59342C3E25AD13B1000BD333 /* AccountView.swift in Sources */,
 				59342C3525AD0A83000BD333 /* Gallery+Wrapping.swift in Sources */,
+				59E3056225AE558B00BB855D /* AlertItem.swift in Sources */,
 				59342C3925AD0C90000BD333 /* TextWithCaption.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -19,6 +19,8 @@ struct AccountView: View {
     @State private var username = ""
     @State private var baseURL = ""
     @State private var password = ""
+    @State private var loggingIn = false
+    @State private var alert: AlertItem?
     
     var body: some View {
         Form {
@@ -33,11 +35,17 @@ struct AccountView: View {
             
             HStack {
                 Button("Login", action: login)
+                if loggingIn {
+                    Spacer()
+                    ProgressView()
+                }
             }
         }
+        .disabled(loggingIn)
         .autocapitalization(.none)
         .disableAutocorrection(true)
         .navigationTitle("Account")
+        .alert(item: $alert, content: AlertItem.alert(for:))
         .onDisappear {
             if accountSelection == nil,
                account.username?.isEmpty ?? true,
@@ -48,10 +56,21 @@ struct AccountView: View {
     }
     
     private func login() {
+        loggingIn = true
         account.username = username
         account.baseURL = baseURL
         webDAVController.testLogin(account: account, password: password) { error in
-            //TODO: Show success or failure alert
+            self.loggingIn = false
+            switch error {
+            case .none:
+                self.alert = .init(title: "Login Successful!")
+            case .unauthorized:
+                self.alert = .init(title: "Login Failed", message: "Incorrect username or password.")
+            case .invalidCredentials:
+                self.alert = .init(title: "Login Failed", message: "Invalid credentials provided.")
+            default:
+                self.alert = .init(title: "Login Failed")
+            }
         }
     }
 }

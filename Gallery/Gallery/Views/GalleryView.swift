@@ -11,6 +11,8 @@ struct GalleryView: View {
     
     @Environment(\.managedObjectContext) private var moc
     
+    @EnvironmentObject private var webDAVController: WebDAVController
+    
     @State private var showingSettings = false
     
     var body: some View {
@@ -34,6 +36,7 @@ struct GalleryView: View {
                         }
                 }
                 .environment(\.managedObjectContext, moc)
+                .environmentObject(webDAVController)
             }
         }
     }
