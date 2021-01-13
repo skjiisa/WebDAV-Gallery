@@ -7,16 +7,46 @@
 
 import Foundation
 import WebDAV
+import KeychainSwift
 
 class WebDAVController: ObservableObject {
     
     private var webDAV = WebDAV()
+    private var keychain = KeychainSwift()
     
-    func testLogin(account: Account, password: String, completion: @escaping (WebDAVError?) -> Void) {
-        webDAV.listFiles(atPath: "/", account: account, password: password) { files, error in
-            completion(error)
-            //TODO: Save password to keychain if no error
+    /// Login and save password if successful.
+    /// - Parameters:
+    ///   - account: The Account to log in with.
+    ///   - givenPassword: The password to log in with.
+    ///   If no password is given, a test login will be performed on the stored password, if any.
+    ///   - completion: If credentials are invalid, this will run immediately on the same thread.
+    ///   Otherwise, it runs when the nextwork call finishes on a background thread.
+    ///   - error: A WebDAVError if the call was unsuccessful.
+    func login(account: Account, password givenPassword: String, completion: @escaping (_ error: WebDAVError?) -> Void) {
+        let password: String
+        if givenPassword.isEmpty {
+            guard let storedPassword = getPassword(for: account) else {
+                return completion(.invalidCredentials)
+            }
+            password = storedPassword
+        } else {
+            password = givenPassword
         }
+        
+        webDAV.listFiles(atPath: "/", account: account, password: password) { [weak self] files, error in
+            switch error {
+            case .none:
+                guard let id = account.id?.uuidString else { break }
+                self?.keychain.set(password, forKey: id)
+            default: break
+            }
+            completion(error)
+        }
+    }
+    
+    private func getPassword(for account: Account) -> String? {
+        guard let id = account.id?.uuidString else { return nil }
+        return keychain.get(id)
     }
     
 }

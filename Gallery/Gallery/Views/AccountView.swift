@@ -59,7 +59,7 @@ struct AccountView: View {
         loggingIn = true
         account.username = username
         account.baseURL = baseURL
-        webDAVController.testLogin(account: account, password: password) { error in
+        webDAVController.login(account: account, password: password) { error in
             self.loggingIn = false
             switch error {
             case .none:
@@ -77,7 +77,7 @@ struct AccountView: View {
 
 struct AccountView_Previews: PreviewProvider {
     static var account: Account = {
-        let account = Account(context: PersistenceController.preview.container.viewContext)
+        let account = Account(username: nil, baseURL: nil, context: PersistenceController.preview.container.viewContext)
         return account
     }()
     static var previews: some View {

@@ -33,7 +33,7 @@ struct SettingsView: View {
                 }
                 
                 Button("Add new account") {
-                    let account = Account(context: moc)
+                    let account = Account(username: nil, baseURL: nil, context: moc)
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                         accountSelection = account
                     }

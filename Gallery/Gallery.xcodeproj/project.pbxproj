@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		59136F1725AE699400E7AD25 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 59136F1625AE699400E7AD25 /* KeychainSwift */; };
+		59136F1A25AE6BCE00E7AD25 /* Gallery+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59136F1925AE6BCE00E7AD25 /* Gallery+Convenience.swift */; };
 		59342C0B25AD0817000BD333 /* GalleryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59342C0A25AD0817000BD333 /* GalleryApp.swift */; };
 		59342C0D25AD0817000BD333 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59342C0C25AD0817000BD333 /* ContentView.swift */; };
 		59342C0F25AD0819000BD333 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 59342C0E25AD0819000BD333 /* Assets.xcassets */; };
@@ -25,6 +26,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		59136F1925AE6BCE00E7AD25 /* Gallery+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gallery+Convenience.swift"; sourceTree = "<group>"; };
 		59342C0725AD0817000BD333 /* Gallery.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gallery.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		59342C0A25AD0817000BD333 /* GalleryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryApp.swift; sourceTree = "<group>"; };
 		59342C0C25AD0817000BD333 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -118,6 +120,7 @@
 			isa = PBXGroup;
 			children = (
 				59342C2625AD0892000BD333 /* Gallery.xcdatamodeld */,
+				59136F1925AE6BCE00E7AD25 /* Gallery+Convenience.swift */,
 				59342C3425AD0A83000BD333 /* Gallery+Wrapping.swift */,
 			);
 			path = Model;
@@ -217,6 +220,7 @@
 				59342C0D25AD0817000BD333 /* ContentView.swift in Sources */,
 				59342C0B25AD0817000BD333 /* GalleryApp.swift in Sources */,
 				59342C3E25AD13B1000BD333 /* AccountView.swift in Sources */,
+				59136F1A25AE6BCE00E7AD25 /* Gallery+Convenience.swift in Sources */,
 				59342C3525AD0A83000BD333 /* Gallery+Wrapping.swift in Sources */,
 				59E3056225AE558B00BB855D /* AlertItem.swift in Sources */,
 				59342C3925AD0C90000BD333 /* TextWithCaption.swift in Sources */,

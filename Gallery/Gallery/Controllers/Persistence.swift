@@ -14,12 +14,12 @@ struct PersistenceController {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
         
-        let account1 = Account(context: viewContext)
-        account1.username = "UserOne"
-        account1.baseURL = "https://example.com/remote.php/dav/files/UserOne/"
-        let account2 = Account(context: viewContext)
-        account2.username = "UserTwo"
-        account2.baseURL = "https://example.com/remote.php/dav/files/UserTwo/"
+        let account1 = Account(username: "UserOne",
+                               baseURL: "https://example.com/remote.php/dav/files/UserOne/",
+                               context: viewContext)
+        let account2 = Account(username: "UserTwo",
+                               baseURL: "https://example.com/remote.php/dav/files/UserTwo/",
+                               context: viewContext)
         
         do {
             try viewContext.save()
