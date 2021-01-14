@@ -18,16 +18,22 @@ struct GalleryView: View {
     var path: String
     
     @State private var showingSettings = false
-    @State private var files: [WebDAVFile] = []
+    @State private var files: [WebDAVFile]?
     @State private var fetchingImages = false
     
     var body: some View {
         List {
             if fetchingImages {
-                ProgressView()
+                HStack {
+                    Spacer()
+                    ProgressView()
+                    Spacer()
+                }
             }
-            ForEach(files) { file in
-                Text(file.path)
+            if let files = files {
+                ForEach(files) { file in
+                    Text(file.name)
+                }
             }
         }
         .navigationTitle("Gallery")
@@ -52,15 +58,13 @@ struct GalleryView: View {
         }
         .onAppear {
             if !fetchingImages,
-               files.isEmpty,
+               files == nil,
                let account = account {
                 fetchingImages = true
                 webDAVController.listFiles(atPath: path, account: account) { files, error in
                     DispatchQueue.main.async {
                         fetchingImages = false
-                        if let files = files {
-                            self.files = files
-                        }
+                        self.files = files ?? []
                     }
                 }
             }
