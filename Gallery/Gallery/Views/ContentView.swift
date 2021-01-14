@@ -10,11 +10,14 @@ import CoreData
 
 struct ContentView: View {
     
+    @FetchRequest(entity: Account.entity(), sortDescriptors: [NSSortDescriptor(key: "username", ascending: true)])
+    private var accounts: FetchedResults<Account>
+    
     @StateObject private var webDAVController = WebDAVController()
     
     var body: some View {
         NavigationView {
-            GalleryView()
+            GalleryView(account: accounts.first, path: "/")
         }
         .environmentObject(webDAVController)
     }

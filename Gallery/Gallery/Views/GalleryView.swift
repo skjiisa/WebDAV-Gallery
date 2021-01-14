@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import WebDAV
 
 struct GalleryView: View {
     
@@ -13,11 +14,21 @@ struct GalleryView: View {
     
     @EnvironmentObject private var webDAVController: WebDAVController
     
+    var account: Account?
+    var path: String
+    
     @State private var showingSettings = false
+    @State private var files: [WebDAVFile] = []
+    @State private var fetchingImages = false
     
     var body: some View {
-        Group {
-            Text("Hello, World!")
+        List {
+            if fetchingImages {
+                ProgressView()
+            }
+            ForEach(files) { file in
+                Text(file.path)
+            }
         }
         .navigationTitle("Gallery")
         .toolbar {
@@ -39,6 +50,21 @@ struct GalleryView: View {
                 .environmentObject(webDAVController)
             }
         }
+        .onAppear {
+            if !fetchingImages,
+               files.isEmpty,
+               let account = account {
+                fetchingImages = true
+                webDAVController.listFiles(atPath: path, account: account) { files, error in
+                    DispatchQueue.main.async {
+                        fetchingImages = false
+                        if let files = files {
+                            self.files = files
+                        }
+                    }
+                }
+            }
+        }
     }
     
 }
@@ -46,7 +72,7 @@ struct GalleryView: View {
 struct GalleryView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            GalleryView()
+            GalleryView(account: nil, path: "/")
         }
         .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }

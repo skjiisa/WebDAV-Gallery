@@ -5,7 +5,7 @@
 //  Created by Isaac Lyons on 1/11/21.
 //
 
-import Foundation
+import UIKit
 import WebDAV
 import KeychainSwift
 
@@ -44,6 +44,16 @@ class WebDAVController: ObservableObject {
             }
             completion(error)
         }
+    }
+    
+    func listFiles(atPath path: String, account: Account, completion: @escaping (_ files: [WebDAVFile]?, _ error: WebDAVError?) -> Void) {
+        guard let password = getPassword(for: account) else { return completion(nil, .invalidCredentials) }
+        webDAV.listFiles(atPath: path, account: account, password: password, completion: completion)
+    }
+    
+    func getImage(atPath path: String, account: Account, completion: @escaping (_ image: UIImage?, _ cachedImageURL: URL?, _ error: WebDAVError?) -> Void) {
+        guard let password = getPassword(for: account) else { return completion(nil, nil, .invalidCredentials) }
+        webDAV.downloadImage(path: path, account: account, password: password, completion: completion)
     }
     
     private func getPassword(for account: Account) -> String? {

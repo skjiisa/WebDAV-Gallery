@@ -43,6 +43,11 @@ struct SettingsView: View {
             Text("Hello, World!")
         }
         .navigationTitle("Settings")
+        .onDisappear {
+            if moc.hasChanges {
+                try? moc.save()
+            }
+        }
     }
 }
 
