@@ -13,6 +13,7 @@ class WebDAVController: ObservableObject {
     
     private var webDAV = WebDAV()
     private var keychain = KeychainSwift()
+    private var passwordCache: [UUID: String] = [:]
     
     /// Login and save password if successful.
     /// - Parameters:
@@ -36,8 +37,9 @@ class WebDAVController: ObservableObject {
         webDAV.listFiles(atPath: "/", account: account, password: password) { [weak self] files, error in
             switch error {
             case .none:
-                guard let id = account.id?.uuidString else { break }
-                self?.keychain.set(password, forKey: id)
+                guard let id = account.id else { break }
+                self?.keychain.set(password, forKey: id.uuidString)
+                self?.passwordCache[id] = password
             default: break
             }
             completion(error)
@@ -45,8 +47,16 @@ class WebDAVController: ObservableObject {
     }
     
     private func getPassword(for account: Account) -> String? {
-        guard let id = account.id?.uuidString else { return nil }
-        return keychain.get(id)
+        guard let id = account.id else { return nil }
+        if let cachedPassword = passwordCache[id] {
+            return cachedPassword
+        }
+        
+        let password = keychain.get(id.uuidString)
+        if let password = password {
+            passwordCache[id] = password
+        }
+        return password
     }
     
 }
