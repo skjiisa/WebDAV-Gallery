@@ -21,6 +21,7 @@ struct AccountView: View {
     @State private var password = ""
     @State private var loggingIn = false
     @State private var alert: AlertItem?
+    @State private var initialzed = false
     
     var body: some View {
         Form {
@@ -46,6 +47,17 @@ struct AccountView: View {
         .disableAutocorrection(true)
         .navigationTitle("Account")
         .alert(item: $alert, content: AlertItem.alert(for:))
+        .onAppear {
+            if !initialzed {
+                initialzed = true
+                if let username = account.username {
+                    self.username = username
+                }
+                if let baseURL = account.baseURL {
+                    self.baseURL = baseURL
+                }
+            }
+        }
         .onDisappear {
             if accountSelection == nil,
                account.username?.isEmpty ?? true,
