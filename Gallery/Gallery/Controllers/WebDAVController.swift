@@ -11,9 +11,19 @@ import KeychainSwift
 
 class WebDAVController: ObservableObject {
     
+    //MARK: Properties
+    
     private var webDAV = WebDAV()
     private var keychain = KeychainSwift()
     private var passwordCache: [UUID: String] = [:]
+    
+    @Published var files: [AccountPath: [WebDAVFile]] = [:]
+    
+    func files(for account: Account, at path: String) -> [WebDAVFile]? {
+        files[AccountPath(account: account, path: path)]
+    }
+    
+    //MARK: WebDAV
     
     /// Login and save password if successful.
     /// - Parameters:
@@ -46,15 +56,25 @@ class WebDAVController: ObservableObject {
         }
     }
     
-    func listFiles(atPath path: String, account: Account, completion: @escaping (_ files: [WebDAVFile]?, _ error: WebDAVError?) -> Void) {
-        guard let password = getPassword(for: account) else { return completion(nil, .invalidCredentials) }
-        webDAV.listFiles(atPath: path, account: account, password: password, completion: completion)
+    func listFiles(atPath path: String, account: Account, completion: @escaping (_ error: WebDAVError?) -> Void) {
+        guard let password = getPassword(for: account) else { return completion(.invalidCredentials) }
+        webDAV.listFiles(atPath: path, account: account, password: password) { [weak self] files, error in
+            if let files = files {
+                let accountPath = AccountPath(account: account, path: path)
+                DispatchQueue.main.async {
+                    self?.files[accountPath] = files
+                }
+            }
+            completion(error)
+        }
     }
     
     func getImage(atPath path: String, account: Account, completion: @escaping (_ image: UIImage?, _ cachedImageURL: URL?, _ error: WebDAVError?) -> Void) {
         guard let password = getPassword(for: account) else { return completion(nil, nil, .invalidCredentials) }
         webDAV.downloadImage(path: path, account: account, password: password, completion: completion)
     }
+    
+    //MARK: Private
     
     private func getPassword(for account: Account) -> String? {
         guard let id = account.id else { return nil }
@@ -67,6 +87,17 @@ class WebDAVController: ObservableObject {
             passwordCache[id] = password
         }
         return password
+    }
+    
+    //MARK: AccountPath
+    
+    struct AccountPath: Hashable {
+        var account: Account
+        var path: String
+        //TODO: write a custom initializer that modifies the path to a standard format
+        // For example, /path/, /path, path, and path/ will all give the same results
+        // from a `listFiles` call, but will generate different AccountPaths and thus
+        // different `files` dictionary keys.
     }
     
 }

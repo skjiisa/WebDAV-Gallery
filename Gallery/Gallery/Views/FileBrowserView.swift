@@ -14,11 +14,9 @@ struct FileBrowserView: View {
     
     @EnvironmentObject private var webDAVController: WebDAVController
     
-    var account: Account?
+    var account: Account
     var path: String
     
-    @State private var showingSettings = false
-    @State private var files: [WebDAVFile]?
     @State private var fetchingImages = false
     
     var body: some View {
@@ -30,41 +28,20 @@ struct FileBrowserView: View {
                     Spacer()
                 }
             }
-            if let files = files {
+            if let files = webDAVController.files(for: account, at: path) {
                 ForEach(files) { file in
                     Text(file.name)
                 }
             }
         }
         .navigationTitle("Gallery")
-        .toolbar {
-            Button {
-                showingSettings = true
-            } label: {
-                Image(systemName: "gear")
-            }
-            .sheet(isPresented: $showingSettings) {
-                NavigationView {
-                    SettingsView()
-                        .toolbar {
-                            Button("Done") {
-                                showingSettings = false
-                            }
-                        }
-                }
-                .environment(\.managedObjectContext, moc)
-                .environmentObject(webDAVController)
-            }
-        }
         .onAppear {
             if !fetchingImages,
-               files == nil,
-               let account = account {
+               webDAVController.files(for: account, at: path) == nil {
                 fetchingImages = true
-                webDAVController.listFiles(atPath: path, account: account) { files, error in
+                webDAVController.listFiles(atPath: path, account: account) { error in
                     DispatchQueue.main.async {
                         fetchingImages = false
-                        self.files = files ?? []
                     }
                 }
             }
@@ -74,10 +51,12 @@ struct FileBrowserView: View {
 }
 
 struct FileBrowserView_Previews: PreviewProvider {
+    static var moc = PersistenceController.preview.container.viewContext
+    
     static var previews: some View {
         NavigationView {
-            FileBrowserView(account: nil, path: "/")
+            FileBrowserView(account: Account(context: moc), path: "/")
         }
-        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+        .environment(\.managedObjectContext, moc)
     }
 }
