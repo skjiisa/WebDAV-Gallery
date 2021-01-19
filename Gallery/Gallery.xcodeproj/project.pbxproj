@@ -16,7 +16,7 @@
 		59342C1425AD0819000BD333 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59342C1325AD0819000BD333 /* Persistence.swift */; };
 		59342C2825AD0892000BD333 /* Gallery.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 59342C2625AD0892000BD333 /* Gallery.xcdatamodeld */; };
 		59342C2B25AD092A000BD333 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59342C2A25AD092A000BD333 /* SettingsView.swift */; };
-		59342C2E25AD0951000BD333 /* GalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59342C2D25AD0951000BD333 /* GalleryView.swift */; };
+		59342C2E25AD0951000BD333 /* FileBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59342C2D25AD0951000BD333 /* FileBrowserView.swift */; };
 		59342C3225AD0A30000BD333 /* WebDAV in Frameworks */ = {isa = PBXBuildFile; productRef = 59342C3125AD0A30000BD333 /* WebDAV */; };
 		59342C3525AD0A83000BD333 /* Gallery+Wrapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59342C3425AD0A83000BD333 /* Gallery+Wrapping.swift */; };
 		59342C3925AD0C90000BD333 /* TextWithCaption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59342C3825AD0C90000BD333 /* TextWithCaption.swift */; };
@@ -36,7 +36,7 @@
 		59342C1825AD0819000BD333 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		59342C2725AD0892000BD333 /* Gallery.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Gallery.xcdatamodel; sourceTree = "<group>"; };
 		59342C2A25AD092A000BD333 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		59342C2D25AD0951000BD333 /* GalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryView.swift; sourceTree = "<group>"; };
+		59342C2D25AD0951000BD333 /* FileBrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileBrowserView.swift; sourceTree = "<group>"; };
 		59342C3425AD0A83000BD333 /* Gallery+Wrapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gallery+Wrapping.swift"; sourceTree = "<group>"; };
 		59342C3825AD0C90000BD333 /* TextWithCaption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextWithCaption.swift; sourceTree = "<group>"; };
 		59342C3D25AD13B1000BD333 /* AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountView.swift; sourceTree = "<group>"; };
@@ -100,7 +100,7 @@
 			isa = PBXGroup;
 			children = (
 				59342C0C25AD0817000BD333 /* ContentView.swift */,
-				59342C2D25AD0951000BD333 /* GalleryView.swift */,
+				59342C2D25AD0951000BD333 /* FileBrowserView.swift */,
 				59342C2A25AD092A000BD333 /* SettingsView.swift */,
 				59342C3D25AD13B1000BD333 /* AccountView.swift */,
 			);
@@ -213,7 +213,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				59342C2B25AD092A000BD333 /* SettingsView.swift in Sources */,
-				59342C2E25AD0951000BD333 /* GalleryView.swift in Sources */,
+				59342C2E25AD0951000BD333 /* FileBrowserView.swift in Sources */,
 				59342C2825AD0892000BD333 /* Gallery.xcdatamodeld in Sources */,
 				59342C1425AD0819000BD333 /* Persistence.swift in Sources */,
 				59342C4125AD1437000BD333 /* WebDAVController.swift in Sources */,

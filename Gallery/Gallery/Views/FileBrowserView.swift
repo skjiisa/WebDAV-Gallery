@@ -1,5 +1,5 @@
 //
-//  GalleryView.swift
+//  FileBrowserView.swift
 //  Gallery
 //
 //  Created by Isaac Lyons on 1/11/21.
@@ -8,7 +8,7 @@
 import SwiftUI
 import WebDAV
 
-struct GalleryView: View {
+struct FileBrowserView: View {
     
     @Environment(\.managedObjectContext) private var moc
     
@@ -73,10 +73,10 @@ struct GalleryView: View {
     
 }
 
-struct GalleryView_Previews: PreviewProvider {
+struct FileBrowserView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            GalleryView(account: nil, path: "/")
+            FileBrowserView(account: nil, path: "/")
         }
         .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }

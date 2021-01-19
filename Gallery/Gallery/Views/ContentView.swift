@@ -17,7 +17,7 @@ struct ContentView: View {
     
     var body: some View {
         NavigationView {
-            GalleryView(account: accounts.first, path: "/")
+            FileBrowserView(account: accounts.first, path: "/")
         }
         .environmentObject(webDAVController)
     }
