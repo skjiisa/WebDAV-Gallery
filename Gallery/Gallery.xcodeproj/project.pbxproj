@@ -426,8 +426,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Isvvc/WebDAV-Swift.git";
 			requirement = {
-				branch = main;
-				kind = branch;
+				kind = revision;
+				revision = 8c4c19fbd0107fb8a486d295da68b63b04b26cdb;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
