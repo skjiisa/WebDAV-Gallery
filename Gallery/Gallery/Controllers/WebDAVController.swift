@@ -13,7 +13,7 @@ class WebDAVController: ObservableObject {
     
     //MARK: Properties
     
-    private var webDAV = WebDAV()
+    var webDAV = WebDAV()
     private var keychain = KeychainSwift()
     private var passwordCache: [UUID: String] = [:]
     

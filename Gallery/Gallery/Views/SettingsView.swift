@@ -17,7 +17,10 @@ struct SettingsView: View {
         animation: .default)
     private var accounts: FetchedResults<Account>
     
+    @EnvironmentObject private var webDAVController: WebDAVController
+    
     @State private var accountSelection: Account?
+    @State private var cacheSize: String = ""
     
     var body: some View {
         Form {
@@ -40,14 +43,25 @@ struct SettingsView: View {
                 }
             }
             
-            Text("Hello, World!")
+            Section(header: Text("Local files")) {
+                Text("Cache size: \(cacheSize)")
+                Button("Clear cache") {
+                    try? webDAVController.webDAV.deleteAllCachedData()
+                    calculateCacheSize()
+                }
+            }
         }
         .navigationTitle("Settings")
+        .onAppear(perform: calculateCacheSize)
         .onDisappear {
             if moc.hasChanges {
                 try? moc.save()
             }
         }
+    }
+    
+    private func calculateCacheSize() {
+        cacheSize = webDAVController.webDAV.getCacheSize()
     }
 }
 
