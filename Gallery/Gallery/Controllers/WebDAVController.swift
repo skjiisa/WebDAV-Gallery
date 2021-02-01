@@ -23,6 +23,28 @@ class WebDAVController: ObservableObject {
         files[AccountPath(account: account, path: path)]
     }
     
+    // Not all of these have been tested.
+    // List from https://developer.apple.com/library/archive/documentation/2DDrawing/Conceptual/DrawingPrintingiOS/LoadingImages/LoadingImages.html#//apple_ref/doc/uid/TP40010156-CH17-SW7
+    // plus extras
+    static let imageExtensions: [String] = [
+        "jpg",
+        "jpeg",
+        "png",
+        "gif",
+        "bmp",
+        "bmpf",
+        "tiff",
+        "tif",
+        "ico",
+        "cur",
+        "xbm",
+        "webp",
+        "heic",
+        "heics",
+        "heif",
+        "heifs"
+    ]
+    
     //MARK: WebDAV
     
     /// Login and save password if successful.
@@ -56,11 +78,10 @@ class WebDAVController: ObservableObject {
         }
     }
     
-    func listFiles(atPath path: String, account: Account, completion: @escaping (_ error: WebDAVError?) -> Void) {
+    func listSupportedFiles(atPath path: String, account: Account, completion: @escaping (_ error: WebDAVError?) -> Void) {
         guard let password = getPassword(for: account) else { return completion(.invalidCredentials) }
         webDAV.listFiles(atPath: path, account: account, password: password) { [weak self] files, error in
-            //TODO: Filter out files that aren't images or directories
-            if let files = files {
+            if let files = files?.filter({ $0.isDirectory || WebDAVController.imageExtensions.contains($0.extension) }) {
                 let accountPath = AccountPath(account: account, path: path)
                 DispatchQueue.main.async {
                     self?.files[accountPath] = files

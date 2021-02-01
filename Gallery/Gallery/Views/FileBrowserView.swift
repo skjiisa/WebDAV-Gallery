@@ -49,7 +49,7 @@ struct FileBrowserView: View {
             if !fetchingImages,
                webDAVController.files(for: account, at: path) == nil {
                 fetchingImages = true
-                webDAVController.listFiles(atPath: path, account: account) { error in
+                webDAVController.listSupportedFiles(atPath: path, account: account) { error in
                     DispatchQueue.main.async {
                         fetchingImages = false
                     }
