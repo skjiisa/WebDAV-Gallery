@@ -59,6 +59,7 @@ class WebDAVController: ObservableObject {
     func listFiles(atPath path: String, account: Account, completion: @escaping (_ error: WebDAVError?) -> Void) {
         guard let password = getPassword(for: account) else { return completion(.invalidCredentials) }
         webDAV.listFiles(atPath: path, account: account, password: password) { [weak self] files, error in
+            //TODO: Filter out files that aren't images or directories
             if let files = files {
                 let accountPath = AccountPath(account: account, path: path)
                 DispatchQueue.main.async {

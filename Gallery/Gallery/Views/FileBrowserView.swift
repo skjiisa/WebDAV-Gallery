@@ -16,6 +16,7 @@ struct FileBrowserView: View {
     @EnvironmentObject private var account: Account
     
     var path: String
+    var title: String?
     
     @State private var fetchingImages = false
     
@@ -30,11 +31,20 @@ struct FileBrowserView: View {
             }
             if let files = webDAVController.files(for: account, at: path) {
                 ForEach(files) { file in
-                    FileCell(file: file)
+                    if file.isDirectory {
+                        NavigationLink(destination:
+                                        FileBrowserView(path: file.path, title: file.name)
+                                        .environmentObject(account)
+                        ) {
+                            FileCell(file: file)
+                        }
+                    } else {
+                        FileCell(file: file)
+                    }
                 }
             }
         }
-        .navigationTitle("Gallery")
+        .navigationTitle(title ?? "Gallery")
         .onAppear {
             if !fetchingImages,
                webDAVController.files(for: account, at: path) == nil {
