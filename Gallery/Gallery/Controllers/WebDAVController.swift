@@ -5,15 +5,47 @@
 //  Created by Isaac Lyons on 1/11/21.
 //
 
-import Foundation
+import UIKit
 import WebDAV
 import KeychainSwift
 
 class WebDAVController: ObservableObject {
     
-    private var webDAV = WebDAV()
+    //MARK: Properties
+    
+    var webDAV = WebDAV()
     private var keychain = KeychainSwift()
     private var passwordCache: [UUID: String] = [:]
+    
+    @Published var files: [AccountPath: [WebDAVFile]] = [:]
+    
+    func files(for account: Account, at path: String) -> [WebDAVFile]? {
+        files[AccountPath(account: account, path: path)]
+    }
+    
+    // Not all of these have been tested.
+    // List from https://developer.apple.com/library/archive/documentation/2DDrawing/Conceptual/DrawingPrintingiOS/LoadingImages/LoadingImages.html#//apple_ref/doc/uid/TP40010156-CH17-SW7
+    // plus extras
+    static let imageExtensions: [String] = [
+        "jpg",
+        "jpeg",
+        "png",
+        "gif",
+        "bmp",
+        "bmpf",
+        "tiff",
+        "tif",
+        "ico",
+        "cur",
+        "xbm",
+        "webp",
+        "heic",
+        "heics",
+        "heif",
+        "heifs"
+    ]
+    
+    //MARK: WebDAV
     
     /// Login and save password if successful.
     /// - Parameters:
@@ -46,6 +78,26 @@ class WebDAVController: ObservableObject {
         }
     }
     
+    func listSupportedFiles(atPath path: String, account: Account, completion: @escaping (_ error: WebDAVError?) -> Void) {
+        guard let password = getPassword(for: account) else { return completion(.invalidCredentials) }
+        webDAV.listFiles(atPath: path, account: account, password: password) { [weak self] files, error in
+            if let files = files?.filter({ $0.isDirectory || WebDAVController.imageExtensions.contains($0.extension) }) {
+                let accountPath = AccountPath(account: account, path: path)
+                DispatchQueue.main.async {
+                    self?.files[accountPath] = files
+                }
+            }
+            completion(error)
+        }
+    }
+    
+    func getImage(atPath path: String, account: Account, completion: @escaping (_ image: UIImage?, _ cachedImageURL: URL?, _ error: WebDAVError?) -> Void) {
+        guard let password = getPassword(for: account) else { return completion(nil, nil, .invalidCredentials) }
+        webDAV.downloadImage(path: path, account: account, password: password, completion: completion)
+    }
+    
+    //MARK: Private
+    
     private func getPassword(for account: Account) -> String? {
         guard let id = account.id else { return nil }
         if let cachedPassword = passwordCache[id] {
@@ -57,6 +109,17 @@ class WebDAVController: ObservableObject {
             passwordCache[id] = password
         }
         return password
+    }
+    
+    //MARK: AccountPath
+    
+    struct AccountPath: Hashable {
+        var account: Account
+        var path: String
+        //TODO: write a custom initializer that modifies the path to a standard format
+        // For example, /path/, /path, path, and path/ will all give the same results
+        // from a `listFiles` call, but will generate different AccountPaths and thus
+        // different `files` dictionary keys.
     }
     
 }
