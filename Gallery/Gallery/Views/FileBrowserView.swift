@@ -19,31 +19,39 @@ struct FileBrowserView: View {
     var title: String?
     
     @State private var fetchingImages = false
+    @State private var numColumns: Int = 2
+    
+    private var columns: [GridItem] {
+        (0..<(fetchingImages ? 1 : numColumns)).map { _ in GridItem(spacing: 0) }
+    }
     
     var body: some View {
-        List {
-            if fetchingImages {
-                HStack {
-                    Spacer()
-                    ProgressView()
-                    Spacer()
+        ScrollView(.vertical) {
+            LazyVGrid(columns: columns) {
+                if fetchingImages {
+                    HStack {
+                        Spacer()
+                        ProgressView()
+                        Spacer()
+                    }
                 }
-            }
-            if let files = webDAVController.files(for: account, at: path) {
-                ForEach(files) { file in
-                    if file.isDirectory {
-                        NavigationLink(destination:
-                                        FileBrowserView(path: file.path, title: file.name)
-                                        .environmentObject(account)
-                        ) {
+                if let files = webDAVController.files(for: account, at: path) {
+                    ForEach(files) { file in
+                        if file.isDirectory {
+                            NavigationLink(destination:
+                                            FileBrowserView(path: file.path, title: file.name)
+                                            .environmentObject(account)
+                            ) {
+                                FileCell(file: file)
+                            }
+                        } else {
                             FileCell(file: file)
                         }
-                    } else {
-                        FileCell(file: file)
                     }
                 }
             }
         }
+        .fixFlickering()
         .navigationTitle(title ?? "Gallery")
         .onAppear {
             if !fetchingImages,
@@ -70,18 +78,34 @@ struct FileCell: View {
     @State private var startedFetch = false
     @State private var image: UIImage?
     
-    var body: some View {
-        HStack {
+    var imageOverlay: some View {
+        Group {
             if let image = image {
                 Image(uiImage: image)
                     .resizable()
+                    .scaledToFill()
+            } else {
+                Image(systemName: file.isDirectory ? "folder" : "photo")
+                    .resizable()
                     .scaledToFit()
-                    .frame(width: 64,
-                           height: 64 * min(1, image.size.height / image.size.width))
+                    .padding(20)
             }
+        }
+    }
+    
+    var body: some View {
+        VStack {
+            Rectangle()
+                .opacity(0)
+                .aspectRatio(1, contentMode: .fill)
+                .overlay(imageOverlay)
+                .cornerRadius(8)
+                .clipped()
             
             Text(file.fileName)
+                .lineLimit(1)
         }
+        .padding(8)
         .onAppear {
             guard !file.isDirectory else { return }
             
