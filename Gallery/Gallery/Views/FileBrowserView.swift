@@ -76,6 +76,7 @@ struct FileCell: View {
     var file: WebDAVFile
     
     @State private var startedFetch = false
+    @State private var finishedFetch = false
     @State private var image: UIImage?
     
     var imageOverlay: some View {
@@ -84,7 +85,10 @@ struct FileCell: View {
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFill()
-            } else {
+            } else if file.isDirectory || finishedFetch {
+                // Show a folder icon for a folder.
+                // Show a photo icon for an item that
+                // fetched but could not be rendered.
                 Image(systemName: file.isDirectory ? "folder" : "photo")
                     .resizable()
                     .scaledToFit()
@@ -118,6 +122,7 @@ struct FileCell: View {
                     }
                     DispatchQueue.main.async {
                         startedFetch = false
+                        finishedFetch = true
                         self.image = image
                     }
                 }
