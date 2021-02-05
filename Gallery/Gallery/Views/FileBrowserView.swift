@@ -37,14 +37,13 @@ struct FileBrowserView: View {
                 }
                 if let files = webDAVController.files(for: account, at: path) {
                     ForEach(files) { file in
-                        if file.isDirectory {
-                            NavigationLink(destination:
-                                            FileBrowserView(path: file.path, title: file.name)
-                                            .environmentObject(account)
-                            ) {
-                                FileCell(file: file)
-                            }
-                        } else {
+                        NavigationLink(destination: file.isDirectory ?
+                                        AnyView(FileBrowserView(path: file.path, title: file.name)
+                                                    .environmentObject(account))
+                                        :
+                                        AnyView(ImageView(file: file)
+                                                    .environmentObject(account))
+                        ) {
                             FileCell(file: file)
                         }
                     }
@@ -121,7 +120,7 @@ struct FileCell: View {
                 startedFetch = true
                 webDAVController.getThumbnail(atPath: file.path, account: account) { image, _, error in
                     if let error = error {
-                        print(error)
+                        NSLog(error.localizedDescription)
                     }
                     DispatchQueue.main.async {
                         startedFetch = false
