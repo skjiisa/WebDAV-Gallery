@@ -18,6 +18,7 @@ class WebDAVController: ObservableObject {
     private var passwordCache: [UUID: String] = [:]
     
     @Published var files: [AccountPath: [WebDAVFile]] = [:]
+    var unsupportedThumbnailSizeLimit = 1_000_000
     
     func files(for account: Account, at path: String) -> [WebDAVFile]? {
         files[AccountPath(account: account, path: path)]
@@ -113,6 +114,12 @@ class WebDAVController: ObservableObject {
         } else if let cachedImage = webDAV.getCachedImage(forItemAtPath: file.path, account: account) {
             // If the full-size image has already been cached, return that.
             completion(cachedImage, try? webDAV.getCachedDataURL(forItemAtPath: file.path, account: account), nil)
+        } else if file.size < unsupportedThumbnailSizeLimit {
+            // If the full-size image is under the specified limit, just fetch that instead.
+            guard let password = getPassword(for: account) else { return completion(nil, nil, .invalidCredentials) }
+            webDAV.downloadImage(path: file.path, account: account, password: password, completion: completion)
+        } else {
+            completion(nil, nil, nil)
         }
     }
     
