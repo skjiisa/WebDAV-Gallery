@@ -11,6 +11,8 @@ struct SettingsView: View {
     
     @Environment(\.managedObjectContext) private var moc
     
+    @AppStorage(Defaults.unsupportedThumbnailSizeLimit.rawValue) private var unsupportedThumbnailSizeLimit: Int = 1_000_000
+    
     @FetchRequest(
         entity: Account.entity(),
         sortDescriptors: [NSSortDescriptor(key: "username", ascending: true)],
@@ -48,6 +50,27 @@ struct SettingsView: View {
                 Button("Clear cache") {
                     try? webDAVController.webDAV.deleteAllCachedData()
                     calculateCacheSize()
+                }
+            }
+            
+            Section(header: Text("Thumbnails"), footer: Text("For image types that don't support thumbnails, download full-size image if it's under this size.")) {
+                Picker("Image size limit", selection: $unsupportedThumbnailSizeLimit) {
+                    Text("Never")
+                        .tag(0)
+                    Text("100 KB")
+                        .tag(100_000)
+                    Text("500 KB")
+                        .tag(500_000)
+                    Text("1 MB")
+                        .tag(1_000_000)
+                    Text("2 MB")
+                        .tag(2_000_000)
+                    Text("5 MB")
+                        .tag(5_000_000)
+                    Text("10 MB")
+                        .tag(10_000_000)
+                    Text("None")
+                        .tag(Int.max)
                 }
             }
         }

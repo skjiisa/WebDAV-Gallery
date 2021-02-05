@@ -18,10 +18,28 @@ class WebDAVController: ObservableObject {
     private var passwordCache: [UUID: String] = [:]
     
     @Published var files: [AccountPath: [WebDAVFile]] = [:]
-    var unsupportedThumbnailSizeLimit = 1_000_000
     
     func files(for account: Account, at path: String) -> [WebDAVFile]? {
         files[AccountPath(account: account, path: path)]
+    }
+    
+    var unsupportedThumbnailSizeLimit: Int {
+        get {
+            UserDefaults.standard.integer(forKey: Defaults.unsupportedThumbnailSizeLimit.rawValue)
+        }
+        set {
+            UserDefaults.standard.setValue(newValue, forKey: Defaults.unsupportedThumbnailSizeLimit.rawValue)
+        }
+    }
+    
+    var unsupportedThumbnailSizeLimitString: String {
+        webDAV.byteCountFormatter.string(fromByteCount: Int64(unsupportedThumbnailSizeLimit))
+    }
+    
+    init() {
+        UserDefaults.standard.register(defaults: [
+            Defaults.unsupportedThumbnailSizeLimit.rawValue: 1_000_000 // 1 MB
+        ])
     }
     
     // Not all of these have been tested.

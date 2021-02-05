@@ -25,6 +25,7 @@
 		59342C4125AD1437000BD333 /* WebDAVController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59342C4025AD1437000BD333 /* WebDAVController.swift */; };
 		597B595425CDE8EF00D30ACE /* ZoomButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 597B595325CDE8EF00D30ACE /* ZoomButtons.swift */; };
 		597B595725CDEC9700D30ACE /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 597B595625CDEC9700D30ACE /* ImageView.swift */; };
+		599B60DA25CE0CFD00473A02 /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 599B60D925CE0CFD00473A02 /* Defaults.swift */; };
 		59E3056225AE558B00BB855D /* AlertItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E3056125AE558B00BB855D /* AlertItem.swift */; };
 /* End PBXBuildFile section */
 
@@ -47,6 +48,7 @@
 		59342C4025AD1437000BD333 /* WebDAVController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebDAVController.swift; sourceTree = "<group>"; };
 		597B595325CDE8EF00D30ACE /* ZoomButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomButtons.swift; sourceTree = "<group>"; };
 		597B595625CDEC9700D30ACE /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
+		599B60D925CE0CFD00473A02 /* Defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
 		59E3056125AE558B00BB855D /* AlertItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -129,6 +131,7 @@
 				59342C2625AD0892000BD333 /* Gallery.xcdatamodeld */,
 				59136F1925AE6BCE00E7AD25 /* Gallery+Convenience.swift */,
 				59342C3425AD0A83000BD333 /* Gallery+Wrapping.swift */,
+				599B60D925CE0CFD00473A02 /* Defaults.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -222,6 +225,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				597B595725CDEC9700D30ACE /* ImageView.swift in Sources */,
+				599B60DA25CE0CFD00473A02 /* Defaults.swift in Sources */,
 				59342C2B25AD092A000BD333 /* SettingsView.swift in Sources */,
 				59342C2E25AD0951000BD333 /* FileBrowserView.swift in Sources */,
 				59342C2825AD0892000BD333 /* Gallery.xcdatamodeld in Sources */,
