@@ -33,8 +33,8 @@
         "repositoryURL": "https://github.com/Isvvc/WebDAV-Swift.git",
         "state": {
           "branch": null,
-          "revision": "bf2ce714b780ea9e87fc30d27644b1fc38cb51bc",
-          "version": "2.1.0"
+          "revision": "08bbd8e2ddd5c466ad78281d737bcfc8c8a4e009",
+          "version": "2.1.1"
         }
       }
     ]
