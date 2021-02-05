@@ -116,7 +116,7 @@ struct FileCell: View {
             if !startedFetch,
                image == nil {
                 startedFetch = true
-                webDAVController.getImage(atPath: file.path, account: account) { image, _, error in
+                webDAVController.getThumbnail(atPath: file.path, account: account) { image, _, error in
                     if let error = error {
                         print(error)
                     }

@@ -96,6 +96,11 @@ class WebDAVController: ObservableObject {
         webDAV.downloadImage(path: path, account: account, password: password, completion: completion)
     }
     
+    func getThumbnail(atPath path: String, account: Account, completion: @escaping (_ image: UIImage?, _ cachedImageURL: URL?, _ error: WebDAVError?) -> Void) {
+        guard let password = getPassword(for: account) else { return completion(nil, nil, .invalidCredentials) }
+        webDAV.downloadThumbnail(path: path, account: account, password: password, with: CGSize(width: 256, height: 256), completion: completion)
+    }
+    
     //MARK: Private
     
     private func getPassword(for account: Account) -> String? {
