@@ -45,6 +45,15 @@ class WebDAVController: ObservableObject {
         "heifs"
     ]
     
+    // The file extensions that support thumbnails.
+    // This list is from experimentation.
+    static let thumbnailExtensions: [String] = [
+        "jpg",
+        "jpeg",
+        "png",
+        "gif"
+    ]
+    
     //MARK: WebDAV
     
     /// Login and save password if successful.
@@ -91,14 +100,17 @@ class WebDAVController: ObservableObject {
         }
     }
     
-    func getImage(atPath path: String, account: Account, completion: @escaping (_ image: UIImage?, _ cachedImageURL: URL?, _ error: WebDAVError?) -> Void) {
+    func getImage(for file: WebDAVFile, account: Account, completion: @escaping (_ image: UIImage?, _ cachedImageURL: URL?, _ error: WebDAVError?) -> Void) {
         guard let password = getPassword(for: account) else { return completion(nil, nil, .invalidCredentials) }
-        webDAV.downloadImage(path: path, account: account, password: password, completion: completion)
+        webDAV.downloadImage(path: file.path, account: account, password: password, completion: completion)
     }
     
-    func getThumbnail(atPath path: String, account: Account, completion: @escaping (_ image: UIImage?, _ cachedImageURL: URL?, _ error: WebDAVError?) -> Void) {
+    func getThumbnail(for file: WebDAVFile, account: Account, completion: @escaping (_ image: UIImage?, _ cachedImageURL: URL?, _ error: WebDAVError?) -> Void) {
+        // Don't try getting thumbnail for image that doesn't support it.
+        guard WebDAVController.thumbnailExtensions.contains(file.extension) else { return completion(nil, nil, .none) }
+        
         guard let password = getPassword(for: account) else { return completion(nil, nil, .invalidCredentials) }
-        webDAV.downloadThumbnail(path: path, account: account, password: password, with: CGSize(width: 256, height: 256), completion: completion)
+        webDAV.downloadThumbnail(path: file.path, account: account, password: password, with: CGSize(width: 256, height: 256), completion: completion)
     }
     
     //MARK: Private
