@@ -23,6 +23,7 @@
 		59342C3925AD0C90000BD333 /* TextWithCaption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59342C3825AD0C90000BD333 /* TextWithCaption.swift */; };
 		59342C3E25AD13B1000BD333 /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59342C3D25AD13B1000BD333 /* AccountView.swift */; };
 		59342C4125AD1437000BD333 /* WebDAVController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59342C4025AD1437000BD333 /* WebDAVController.swift */; };
+		597B595425CDE8EF00D30ACE /* ZoomButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 597B595325CDE8EF00D30ACE /* ZoomButtons.swift */; };
 		59E3056225AE558B00BB855D /* AlertItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E3056125AE558B00BB855D /* AlertItem.swift */; };
 /* End PBXBuildFile section */
 
@@ -43,6 +44,7 @@
 		59342C3825AD0C90000BD333 /* TextWithCaption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextWithCaption.swift; sourceTree = "<group>"; };
 		59342C3D25AD13B1000BD333 /* AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountView.swift; sourceTree = "<group>"; };
 		59342C4025AD1437000BD333 /* WebDAVController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebDAVController.swift; sourceTree = "<group>"; };
+		597B595325CDE8EF00D30ACE /* ZoomButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomButtons.swift; sourceTree = "<group>"; };
 		59E3056125AE558B00BB855D /* AlertItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -134,6 +136,7 @@
 				59342C3825AD0C90000BD333 /* TextWithCaption.swift */,
 				59E3056125AE558B00BB855D /* AlertItem.swift */,
 				591BA4D925CA1E9E0014C2AA /* ScrollView+Fix.swift */,
+				597B595325CDE8EF00D30ACE /* ZoomButtons.swift */,
 			);
 			path = "Supplemental Views";
 			sourceTree = "<group>";
@@ -221,6 +224,7 @@
 				59342C1425AD0819000BD333 /* Persistence.swift in Sources */,
 				59342C4125AD1437000BD333 /* WebDAVController.swift in Sources */,
 				59342C0D25AD0817000BD333 /* ContentView.swift in Sources */,
+				597B595425CDE8EF00D30ACE /* ZoomButtons.swift in Sources */,
 				59342C0B25AD0817000BD333 /* GalleryApp.swift in Sources */,
 				59342C3E25AD13B1000BD333 /* AccountView.swift in Sources */,
 				591BA4DA25CA1E9E0014C2AA /* ScrollView+Fix.swift in Sources */,

@@ -53,6 +53,9 @@ struct FileBrowserView: View {
         }
         .fixFlickering()
         .navigationTitle(title ?? "Gallery")
+        .toolbar {
+            ZoomButtons(numColumns: $numColumns)
+        }
         .onAppear {
             if !fetchingImages,
                webDAVController.files(for: account, at: path) == nil {
