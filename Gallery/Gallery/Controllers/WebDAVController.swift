@@ -130,21 +130,33 @@ class WebDAVController: ObservableObject {
         webDAV.downloadImage(path: file.path, account: account, password: password, completion: completion)
     }
     
-    func getThumbnail(for file: WebDAVFile, account: Account, completion: @escaping (_ image: UIImage?, _ cachedImageURL: URL?, _ error: WebDAVError?) -> Void) {
+    func getThumbnail(for file: WebDAVFile, account: Account, completion: @escaping (_ image: UIImage?, _ cachedImageURL: URL?, _ error: WebDAVError?) -> Void) -> String? {
         // Don't try getting thumbnail for image that doesn't support it.
         if WebDAVController.thumbnailExtensions.contains(file.extension) {
-            guard let password = getPassword(for: account) else { return completion(nil, nil, .invalidCredentials) }
-            webDAV.downloadThumbnail(path: file.path, account: account, password: password, with: CGSize(width: 256, height: 256), completion: completion)
-        } else if let cachedImage = webDAV.getCachedImage(forItemAtPath: file.path, account: account) {
+            guard let password = getPassword(for: account) else {
+                completion(nil, nil, .invalidCredentials)
+                return nil
+            }
+            return webDAV.downloadThumbnail(path: file.path, account: account, password: password, with: CGSize(width: 256, height: 256), completion: completion)
+        }
+        
+        if let cachedImage = webDAV.getCachedImage(forItemAtPath: file.path, account: account) {
             // If the full-size image has already been cached, return that.
             completion(cachedImage, try? webDAV.getCachedDataURL(forItemAtPath: file.path, account: account), nil)
-        } else if file.size < unsupportedThumbnailSizeLimit {
-            // If the full-size image is under the specified limit, just fetch that instead.
-            guard let password = getPassword(for: account) else { return completion(nil, nil, .invalidCredentials) }
-            webDAV.downloadImage(path: file.path, account: account, password: password, completion: completion)
-        } else {
-            completion(nil, nil, nil)
+            return nil
         }
+        
+        if file.size < unsupportedThumbnailSizeLimit {
+            // If the full-size image is under the specified limit, just fetch that instead.
+            guard let password = getPassword(for: account) else {
+                completion(nil, nil, .invalidCredentials)
+                return nil
+            }
+            return webDAV.downloadImage(path: file.path, account: account, password: password, completion: completion)
+        }
+        
+        completion(nil, nil, nil)
+        return nil
     }
     
     //MARK: Private

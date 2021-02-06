@@ -77,7 +77,7 @@ struct FileCell: View {
     
     var file: WebDAVFile
     
-    @State private var startedFetch = false
+    @State private var requestID: String?
     @State private var finishedFetch = false
     @State private var image: UIImage?
     
@@ -115,19 +115,24 @@ struct FileCell: View {
         .onAppear {
             guard !file.isDirectory else { return }
             
-            if !startedFetch,
+            if requestID == nil,
                image == nil {
-                startedFetch = true
-                webDAVController.getThumbnail(for: file, account: account) { image, _, error in
+                requestID = webDAVController.getThumbnail(for: file, account: account) { image, _, error in
                     if let error = error {
                         NSLog(error.localizedDescription)
                     }
                     DispatchQueue.main.async {
-                        startedFetch = false
+                        requestID = nil
                         finishedFetch = true
                         self.image = image
                     }
                 }
+            }
+        }
+        .onDisappear {
+            if let requestID = requestID {
+                webDAVController.webDAV.cancelRequest(id: requestID, account: account)
+                self.requestID = nil
             }
         }
     }
