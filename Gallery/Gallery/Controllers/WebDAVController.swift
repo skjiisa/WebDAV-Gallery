@@ -130,6 +130,7 @@ class WebDAVController: ObservableObject {
         webDAV.downloadImage(path: file.path, account: account, password: password, completion: completion)
     }
     
+    @discardableResult
     func getThumbnail(for file: WebDAVFile, account: Account, completion: @escaping (_ image: UIImage?, _ cachedImageURL: URL?, _ error: WebDAVError?) -> Void) -> String? {
         // Don't try getting thumbnail for image that doesn't support it.
         if WebDAVController.thumbnailExtensions.contains(file.extension) {
