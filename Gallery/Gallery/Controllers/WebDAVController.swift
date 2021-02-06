@@ -5,7 +5,7 @@
 //  Created by Isaac Lyons on 1/11/21.
 //
 
-import UIKit
+import SwiftUI
 import WebDAV
 import KeychainSwift
 
@@ -118,7 +118,15 @@ class WebDAVController: ObservableObject {
             if let files = files?.filter({ $0.isDirectory || WebDAVController.imageExtensions.contains($0.extension) }) {
                 let accountPath = AccountPath(account: account, path: path)
                 DispatchQueue.main.async {
-                    self?.files[accountPath] = files
+                    if self?.files[accountPath] == nil {
+                        // If this is the initial fetch, don't animate it.
+                        self?.files[accountPath] = files
+                    } else {
+                        // If it's updating and existing directory, animate the change.
+                        withAnimation {
+                            self?.files[accountPath] = files
+                        }
+                    }
                 }
             }
             completion(error)

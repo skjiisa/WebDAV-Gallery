@@ -19,16 +19,17 @@ struct FileBrowserView: View {
     var title: String?
     
     @State private var fetchingImages = false
+    @State private var initalFetch = true
     @State private var numColumns: Int = 2
     
     private var columns: [GridItem] {
-        (0..<(fetchingImages ? 1 : numColumns)).map { _ in GridItem(spacing: 0) }
+        (0..<(initalFetch ? 1 : numColumns)).map { _ in GridItem(spacing: 0) }
     }
     
     var body: some View {
         ScrollView(.vertical) {
             LazyVGrid(columns: columns) {
-                if fetchingImages {
+                if initalFetch {
                     HStack {
                         Spacer()
                         ProgressView()
@@ -56,12 +57,12 @@ struct FileBrowserView: View {
             ZoomButtons(numColumns: $numColumns)
         }
         .onAppear {
-            if !fetchingImages,
-               webDAVController.files(for: account, at: path) == nil {
+            if !fetchingImages {
                 fetchingImages = true
                 webDAVController.listSupportedFiles(atPath: path, account: account) { error in
                     DispatchQueue.main.async {
                         fetchingImages = false
+                        initalFetch = false
                     }
                 }
             }
