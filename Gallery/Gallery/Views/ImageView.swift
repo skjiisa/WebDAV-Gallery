@@ -16,14 +16,19 @@ struct ImageView: View {
     var file: WebDAVFile
     
     @State private var startedFetch = false
+    @State private var finishedFetch = false
     @State private var image: UIImage?
     
     var body: some View {
-        VStack {
+        ZStack {
             if let image = image {
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFit()
+            }
+            
+            if startedFetch && !finishedFetch {
+                ProgressView()
             }
         }
         .navigationTitle(file.name)
@@ -52,6 +57,7 @@ struct ImageView: View {
                     if let image = image {
                         DispatchQueue.main.async {
                             self.image = image
+                            self.finishedFetch = true
                         }
                     }
                 }
