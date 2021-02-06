@@ -57,11 +57,17 @@ class WebDAVController: ObservableObject {
         "ico",
         "cur",
         "xbm",
-        "webp",
+        "webp"
+        /* HEIF images cause the app to lag really badly when rendered.
+         * Not sure what can be done about this. It seems to be worst the
+         * first time one is displayed. When that happens, this is output:
+            AVDRegister - AppleAVD HEVC codec registered
+         * Can't find anything online about this. Dropping support for now.
         "heic",
         "heics",
         "heif",
         "heifs"
+         */
     ]
     
     // The file extensions that support thumbnails.
