@@ -17,6 +17,8 @@ struct FileBrowserView: View {
     
     var title: String?
     
+    @Namespace private var namespace
+    
     @State private var directory: WebDAVFile?
     @State private var fetchingFiles = false
     @State private var numColumns: Int = 2
@@ -36,14 +38,16 @@ struct FileBrowserView: View {
                     ForEach(files) { file in
                         if file.isDirectory {
                             Button {
-                                webDAVController.parents[file] = directory
-                                directory = file
-                                load()
+                                withAnimation {
+                                    webDAVController.parents[file] = directory
+                                    directory = file
+                                    load()
+                                }
                             } label: {
-                                FileCell(file: file)
+                                FileCell(file: file, ns: namespace)
                             }
                         } else {
-                            FileCell(file: file)
+                            FileCell(file: file, ns : namespace)
                         }
                     }
                 } else {
@@ -63,13 +67,7 @@ struct FileBrowserView: View {
             }
             ToolbarItem(placement: .navigation) {
                 if directory != nil {
-                    Button("Back") {
-                        if let directory = self.directory {
-                            self.directory = webDAVController.parents[directory]
-                        } else {
-                            self.directory = nil
-                        }
-                    }
+                    Button("Back", action: back)
                 }
             }
         }
@@ -87,6 +85,17 @@ struct FileBrowserView: View {
         }
     }
     
+    private func back() {
+        withAnimation {
+            if let directory = self.directory {
+                self.directory = webDAVController.parents[directory]
+            } else {
+                self.directory = nil
+            }
+        }
+        load()
+    }
+    
 }
 
 struct FileCell: View {
@@ -95,8 +104,11 @@ struct FileCell: View {
     @EnvironmentObject private var account: Account
     
     var file: WebDAVFile
+    var compact = false
+    var ns: Namespace.ID
     
     @State private var requestID: String?
+    @State private var fetchingFiles = false
     @State private var finishedFetch = false
     @State private var image: UIImage?
     
@@ -106,14 +118,33 @@ struct FileCell: View {
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFill()
-            } else if file.isDirectory || finishedFetch {
-                // Show a folder icon for a folder.
+            } else if file.isDirectory {
+                ZStack {
+                    if let images = webDAVController.images(for: account, at: file.path),
+                       images.count > 0 {
+                        LazyVGrid(columns: [GridItem(), GridItem()]) {
+                            ForEach(0..<4) { index in
+                                if index < images.count {
+                                    FileCell(file: images[index], compact: true, ns: ns)
+                                }
+                            }
+                        }
+                    }
+                    let count = webDAVController.images(for: account, at: file.path)?.count ?? 0
+                    Image(systemName: "folder\(count == 0 ? "" : ".fill")")
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundColor(count == 0 ? .accentColor : .gray)
+                        .opacity(count == 0 ? 1 : 0.8)
+                        .padding(20)
+                }
+            } else if finishedFetch {
                 // Show a photo icon for an item that
                 // fetched but could not be rendered.
-                Image(systemName: file.isDirectory ? "folder" : "photo")
+                Image(systemName: "photo")
                     .resizable()
                     .scaledToFit()
-                    .padding(20)
+                    .padding(compact ? 10 : 20)
             }
         }
     }
@@ -124,34 +155,59 @@ struct FileCell: View {
                 .opacity(0)
                 .aspectRatio(1, contentMode: .fill)
                 .overlay(imageOverlay)
-                .cornerRadius(8)
+                .cornerRadius(compact ? 4 : 8)
                 .clipped()
+                .matchedGeometryEffect(id: file.id, in: ns)
             
-            Text(file.fileName)
-                .lineLimit(1)
+            if !compact {
+                Text(file.fileName)
+                    .lineLimit(1)
+            }
         }
-        .padding(8)
+        .padding(compact ? 4 : 8)
         .onAppear {
-            guard !file.isDirectory else { return }
-            
-            if requestID == nil,
-               image == nil {
-                requestID = webDAVController.getThumbnail(for: file, account: account) { image, _, error in
-                    if let error = error {
-                        NSLog(error.localizedDescription)
-                    }
-                    DispatchQueue.main.async {
-                        requestID = nil
-                        finishedFetch = true
-                        self.image = image
-                    }
-                }
+            if file.isDirectory {
+                fetchFiles()
+            } else {
+                fetchImage()
             }
         }
         .onDisappear {
             if let requestID = requestID {
                 webDAVController.webDAV.cancelRequest(id: requestID, account: account)
                 self.requestID = nil
+            }
+        }
+    }
+    
+    private func fetchImage() {
+        guard requestID == nil,
+              image == nil,
+              // These are simply previews and don't need to bother
+              // updating if there's already cached content.
+              webDAVController.images(for: account, at: file.path) == nil else { return }
+        requestID = webDAVController.getThumbnail(for: file, account: account) { image, _, error in
+            if let error = error {
+                NSLog(error.localizedDescription)
+            }
+            DispatchQueue.main.async {
+                requestID = nil
+                finishedFetch = true
+                self.image = image
+            }
+        }
+    }
+    
+    private func fetchFiles() {
+        guard !fetchingFiles else { return }
+        fetchingFiles = true
+        webDAVController.listSupportedFiles(atPath: file.path, account: account) { error in
+            if let error = error {
+                NSLog(error.localizedDescription)
+            }
+            DispatchQueue.main.async {
+                fetchingFiles = false
+                finishedFetch = true
             }
         }
     }
