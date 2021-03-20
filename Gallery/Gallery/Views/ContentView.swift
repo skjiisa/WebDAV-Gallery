@@ -22,7 +22,7 @@ struct ContentView: View {
         NavigationView {
             Group {
                 if let account = accounts.first {
-                    FileBrowserView(path: "/")
+                    FileBrowserView()
                         .environmentObject(account)
                 } else {
                     Text("Please add an account")

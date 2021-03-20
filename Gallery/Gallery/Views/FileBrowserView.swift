@@ -15,38 +15,42 @@ struct FileBrowserView: View {
     @EnvironmentObject private var webDAVController: WebDAVController
     @EnvironmentObject private var account: Account
     
-    var path: String
     var title: String?
     
-    @State private var fetchingImages = false
-    @State private var initalFetch = true
+    @State private var directory: WebDAVFile?
+    @State private var fetchingFiles = false
     @State private var numColumns: Int = 2
     
+    var contents: [WebDAVFile]? {
+        webDAVController.files(for: account, at: directory?.path ?? "/")
+    }
+    
     private var columns: [GridItem] {
-        (0..<(initalFetch ? 1 : numColumns)).map { _ in GridItem(spacing: 0) }
+        (0..<(contents == nil ? 1 : numColumns)).map { _ in GridItem(spacing: 0) }
     }
     
     var body: some View {
         ScrollView(.vertical) {
             LazyVGrid(columns: columns) {
-                if initalFetch {
+                if let files = contents {
+                    ForEach(files) { file in
+                        if file.isDirectory {
+                            Button {
+                                webDAVController.parents[file] = directory
+                                directory = file
+                                load()
+                            } label: {
+                                FileCell(file: file)
+                            }
+                        } else {
+                            FileCell(file: file)
+                        }
+                    }
+                } else {
                     HStack {
                         Spacer()
                         ProgressView()
                         Spacer()
-                    }
-                }
-                if let files = webDAVController.files(for: account, at: path) {
-                    ForEach(files) { file in
-                        NavigationLink(destination: file.isDirectory ?
-                                        AnyView(FileBrowserView(path: file.path, title: file.name)
-                                                    .environmentObject(account))
-                                        :
-                                        AnyView(ImageView(file: file)
-                                                    .environmentObject(account))
-                        ) {
-                            FileCell(file: file)
-                        }
                     }
                 }
             }
@@ -54,16 +58,30 @@ struct FileBrowserView: View {
         .fixFlickering()
         .navigationTitle(title ?? "Gallery")
         .toolbar {
-            ZoomButtons(numColumns: $numColumns)
-        }
-        .onAppear {
-            if !fetchingImages {
-                fetchingImages = true
-                webDAVController.listSupportedFiles(atPath: path, account: account) { error in
-                    DispatchQueue.main.async {
-                        fetchingImages = false
-                        initalFetch = false
+            ToolbarItem(placement: .primaryAction) {
+                ZoomButtons(numColumns: $numColumns)
+            }
+            ToolbarItem(placement: .navigation) {
+                if directory != nil {
+                    Button("Back") {
+                        if let directory = self.directory {
+                            self.directory = webDAVController.parents[directory]
+                        } else {
+                            self.directory = nil
+                        }
                     }
+                }
+            }
+        }
+        .onAppear(perform: load)
+    }
+    
+    private func load() {
+        if !fetchingFiles {
+            fetchingFiles = true
+            webDAVController.listSupportedFiles(atPath: directory?.path ?? "/", account: account) { error in
+                DispatchQueue.main.async {
+                    fetchingFiles = false
                 }
             }
         }
@@ -144,7 +162,7 @@ struct FileBrowserView_Previews: PreviewProvider {
     
     static var previews: some View {
         NavigationView {
-            FileBrowserView(path: "/")
+            FileBrowserView()
         }
         .environment(\.managedObjectContext, moc)
         .environmentObject(Account(context: moc))

@@ -18,6 +18,7 @@ class WebDAVController: ObservableObject {
     private var passwordCache: [UUID: String] = [:]
     
     @Published var files: [AccountPath: [WebDAVFile]] = [:]
+    var parents: [WebDAVFile: WebDAVFile] = [:]
     
     func files(for account: Account, at path: String) -> [WebDAVFile]? {
         files[AccountPath(account: account, path: path)]
