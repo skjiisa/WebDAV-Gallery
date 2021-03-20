@@ -8,7 +8,11 @@
 import SwiftUI
 import WebDAV
 
+//MARK: FileBrowserView
+
 struct FileBrowserView: View {
+    
+    //MARK: Properties
     
     @Environment(\.managedObjectContext) private var moc
     
@@ -23,6 +27,9 @@ struct FileBrowserView: View {
     @State private var fetchingFiles = false
     @State private var numColumns: Int = 2
     
+    @State private var offset: CGFloat = 0.0
+    @State private var x: CGFloat = 0.0
+    
     var contents: [WebDAVFile]? {
         webDAVController.files(for: account, at: directory?.path ?? "/")
     }
@@ -30,6 +37,49 @@ struct FileBrowserView: View {
     private var columns: [GridItem] {
         (0..<(contents == nil ? 1 : numColumns)).map { _ in GridItem(spacing: 0) }
     }
+    
+    //MARK: Views
+    
+    let width = UIScreen.main.bounds.width
+    
+    private var backGesture: some Gesture {
+        DragGesture().onChanged{ value in
+            guard directory != nil else { return }
+            if x == 0 && offset == 0 && value.location.x < 100 {
+                withAnimation(.interactiveSpring()) {
+                    offset = 100
+                    print(offset)
+                }
+            } else {
+                x = min(value.translation.width, width/2 - offset)
+            }
+        }.onEnded { value in
+            // -8 to add some leniency
+            if x + offset > width/2 - 8 {
+                back()
+            }
+            withAnimation(.spring()) {
+                x = 0
+                offset = 0
+            }
+        }
+    }
+    
+    private var backArrow: some View {
+        Circle()
+            .foregroundColor(Color(.separator))
+            .frame(width: 100, height: 100)
+            .overlay(
+                Image(systemName: "arrow.backward")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .offset(x: 25)
+                    .frame(width: 40)
+                    .foregroundColor(.white)
+            )
+    }
+    
+    //MARK: Body
     
     var body: some View {
         ScrollView(.vertical) {
@@ -72,7 +122,12 @@ struct FileBrowserView: View {
             }
         }
         .onAppear(perform: load)
+        
+        .gesture(backGesture)
+        .overlay(backArrow.offset(x: x - width + offset))
     }
+    
+    //MARK: Functions
     
     private func load() {
         if !fetchingFiles {
@@ -98,7 +153,11 @@ struct FileBrowserView: View {
     
 }
 
+//MARK: FileCell
+
 struct FileCell: View {
+    
+    //MARK: Properties
     
     @EnvironmentObject private var webDAVController: WebDAVController
     @EnvironmentObject private var account: Account
@@ -111,6 +170,8 @@ struct FileCell: View {
     @State private var fetchingFiles = false
     @State private var finishedFetch = false
     @State private var image: UIImage?
+    
+    //MARK: Views
     
     var imageOverlay: some View {
         Group {
@@ -149,6 +210,8 @@ struct FileCell: View {
         }
     }
     
+    //MARK: Body
+    
     var body: some View {
         VStack {
             Rectangle()
@@ -179,6 +242,8 @@ struct FileCell: View {
             }
         }
     }
+    
+    //MARK: Functions
     
     private func fetchImage() {
         guard requestID == nil,
@@ -212,6 +277,8 @@ struct FileCell: View {
         }
     }
 }
+
+//MARK: Previews
 
 struct FileBrowserView_Previews: PreviewProvider {
     static var moc = PersistenceController.preview.container.viewContext
