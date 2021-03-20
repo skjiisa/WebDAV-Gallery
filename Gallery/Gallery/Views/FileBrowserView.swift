@@ -19,39 +19,50 @@ struct FileBrowserView: View {
     var title: String?
     
     @State private var fetchingImages = false
+    @State private var initalFetch = true
+    @State private var numColumns: Int = 2
+    
+    private var columns: [GridItem] {
+        (0..<(initalFetch ? 1 : numColumns)).map { _ in GridItem(spacing: 0) }
+    }
     
     var body: some View {
-        List {
-            if fetchingImages {
-                HStack {
-                    Spacer()
-                    ProgressView()
-                    Spacer()
+        ScrollView(.vertical) {
+            LazyVGrid(columns: columns) {
+                if initalFetch {
+                    HStack {
+                        Spacer()
+                        ProgressView()
+                        Spacer()
+                    }
                 }
-            }
-            if let files = webDAVController.files(for: account, at: path) {
-                ForEach(files) { file in
-                    if file.isDirectory {
-                        NavigationLink(destination:
-                                        FileBrowserView(path: file.path, title: file.name)
-                                        .environmentObject(account)
+                if let files = webDAVController.files(for: account, at: path) {
+                    ForEach(files) { file in
+                        NavigationLink(destination: file.isDirectory ?
+                                        AnyView(FileBrowserView(path: file.path, title: file.name)
+                                                    .environmentObject(account))
+                                        :
+                                        AnyView(ImageView(file: file)
+                                                    .environmentObject(account))
                         ) {
                             FileCell(file: file)
                         }
-                    } else {
-                        FileCell(file: file)
                     }
                 }
             }
         }
+        .fixFlickering()
         .navigationTitle(title ?? "Gallery")
+        .toolbar {
+            ZoomButtons(numColumns: $numColumns)
+        }
         .onAppear {
-            if !fetchingImages,
-               webDAVController.files(for: account, at: path) == nil {
+            if !fetchingImages {
                 fetchingImages = true
                 webDAVController.listSupportedFiles(atPath: path, account: account) { error in
                     DispatchQueue.main.async {
                         fetchingImages = false
+                        initalFetch = false
                     }
                 }
             }
@@ -67,36 +78,62 @@ struct FileCell: View {
     
     var file: WebDAVFile
     
-    @State private var startedFetch = false
+    @State private var requestID: String?
+    @State private var finishedFetch = false
     @State private var image: UIImage?
     
-    var body: some View {
-        HStack {
+    var imageOverlay: some View {
+        Group {
             if let image = image {
                 Image(uiImage: image)
                     .resizable()
+                    .scaledToFill()
+            } else if file.isDirectory || finishedFetch {
+                // Show a folder icon for a folder.
+                // Show a photo icon for an item that
+                // fetched but could not be rendered.
+                Image(systemName: file.isDirectory ? "folder" : "photo")
+                    .resizable()
                     .scaledToFit()
-                    .frame(width: 64,
-                           height: 64 * min(1, image.size.height / image.size.width))
+                    .padding(20)
             }
+        }
+    }
+    
+    var body: some View {
+        VStack {
+            Rectangle()
+                .opacity(0)
+                .aspectRatio(1, contentMode: .fill)
+                .overlay(imageOverlay)
+                .cornerRadius(8)
+                .clipped()
             
             Text(file.fileName)
+                .lineLimit(1)
         }
+        .padding(8)
         .onAppear {
             guard !file.isDirectory else { return }
             
-            if !startedFetch,
+            if requestID == nil,
                image == nil {
-                startedFetch = true
-                webDAVController.getImage(atPath: file.path, account: account) { image, _, error in
+                requestID = webDAVController.getThumbnail(for: file, account: account) { image, _, error in
                     if let error = error {
-                        print(error)
+                        NSLog(error.localizedDescription)
                     }
                     DispatchQueue.main.async {
-                        startedFetch = false
+                        requestID = nil
+                        finishedFetch = true
                         self.image = image
                     }
                 }
+            }
+        }
+        .onDisappear {
+            if let requestID = requestID {
+                webDAVController.webDAV.cancelRequest(id: requestID, account: account)
+                self.requestID = nil
             }
         }
     }

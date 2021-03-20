@@ -5,7 +5,7 @@
 //  Created by Isaac Lyons on 1/11/21.
 //
 
-import UIKit
+import SwiftUI
 import WebDAV
 import KeychainSwift
 
@@ -23,6 +23,25 @@ class WebDAVController: ObservableObject {
         files[AccountPath(account: account, path: path)]
     }
     
+    var unsupportedThumbnailSizeLimit: Int {
+        get {
+            UserDefaults.standard.integer(forKey: Defaults.unsupportedThumbnailSizeLimit.rawValue)
+        }
+        set {
+            UserDefaults.standard.setValue(newValue, forKey: Defaults.unsupportedThumbnailSizeLimit.rawValue)
+        }
+    }
+    
+    var unsupportedThumbnailSizeLimitString: String {
+        webDAV.byteCountFormatter.string(fromByteCount: Int64(unsupportedThumbnailSizeLimit))
+    }
+    
+    init() {
+        UserDefaults.standard.register(defaults: [
+            Defaults.unsupportedThumbnailSizeLimit.rawValue: 1_000_000 // 1 MB
+        ])
+    }
+    
     // Not all of these have been tested.
     // List from https://developer.apple.com/library/archive/documentation/2DDrawing/Conceptual/DrawingPrintingiOS/LoadingImages/LoadingImages.html#//apple_ref/doc/uid/TP40010156-CH17-SW7
     // plus extras
@@ -38,11 +57,26 @@ class WebDAVController: ObservableObject {
         "ico",
         "cur",
         "xbm",
-        "webp",
+        "webp"
+        /* HEIF images cause the app to lag really badly when rendered.
+         * Not sure what can be done about this. It seems to be worst the
+         * first time one is displayed. When that happens, this is output:
+            AVDRegister - AppleAVD HEVC codec registered
+         * Can't find anything online about this. Dropping support for now.
         "heic",
         "heics",
         "heif",
         "heifs"
+         */
+    ]
+    
+    // The file extensions that support thumbnails.
+    // This list is from experimentation.
+    static let thumbnailExtensions: [String] = [
+        "jpg",
+        "jpeg",
+        "png",
+        "gif"
     ]
     
     //MARK: WebDAV
@@ -84,16 +118,54 @@ class WebDAVController: ObservableObject {
             if let files = files?.filter({ $0.isDirectory || WebDAVController.imageExtensions.contains($0.extension) }) {
                 let accountPath = AccountPath(account: account, path: path)
                 DispatchQueue.main.async {
-                    self?.files[accountPath] = files
+                    if self?.files[accountPath] == nil {
+                        // If this is the initial fetch, don't animate it.
+                        self?.files[accountPath] = files
+                    } else {
+                        // If it's updating and existing directory, animate the change.
+                        withAnimation {
+                            self?.files[accountPath] = files
+                        }
+                    }
                 }
             }
             completion(error)
         }
     }
     
-    func getImage(atPath path: String, account: Account, completion: @escaping (_ image: UIImage?, _ cachedImageURL: URL?, _ error: WebDAVError?) -> Void) {
+    func getImage(for file: WebDAVFile, account: Account, completion: @escaping (_ image: UIImage?, _ cachedImageURL: URL?, _ error: WebDAVError?) -> Void) {
         guard let password = getPassword(for: account) else { return completion(nil, nil, .invalidCredentials) }
-        webDAV.downloadImage(path: path, account: account, password: password, completion: completion)
+        webDAV.downloadImage(path: file.path, account: account, password: password, completion: completion)
+    }
+    
+    @discardableResult
+    func getThumbnail(for file: WebDAVFile, account: Account, completion: @escaping (_ image: UIImage?, _ cachedImageURL: URL?, _ error: WebDAVError?) -> Void) -> String? {
+        // Don't try getting thumbnail for image that doesn't support it.
+        if WebDAVController.thumbnailExtensions.contains(file.extension) {
+            guard let password = getPassword(for: account) else {
+                completion(nil, nil, .invalidCredentials)
+                return nil
+            }
+            return webDAV.downloadThumbnail(path: file.path, account: account, password: password, with: CGSize(width: 256, height: 256), completion: completion)
+        }
+        
+        if let cachedImage = webDAV.getCachedImage(forItemAtPath: file.path, account: account) {
+            // If the full-size image has already been cached, return that.
+            completion(cachedImage, try? webDAV.getCachedDataURL(forItemAtPath: file.path, account: account), nil)
+            return nil
+        }
+        
+        if file.size < unsupportedThumbnailSizeLimit {
+            // If the full-size image is under the specified limit, just fetch that instead.
+            guard let password = getPassword(for: account) else {
+                completion(nil, nil, .invalidCredentials)
+                return nil
+            }
+            return webDAV.downloadImage(path: file.path, account: account, password: password, completion: completion)
+        }
+        
+        completion(nil, nil, nil)
+        return nil
     }
     
     //MARK: Private
