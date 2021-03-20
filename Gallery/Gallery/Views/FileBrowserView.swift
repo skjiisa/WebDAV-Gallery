@@ -86,19 +86,16 @@ struct FileBrowserView: View {
             LazyVGrid(columns: columns) {
                 if let files = contents {
                     ForEach(files) { file in
-                        if file.isDirectory {
-                            Button {
-                                withAnimation {
-                                    webDAVController.parents[file] = directory
-                                    directory = file
-                                    load()
+                        FileCell(file: file, ns : namespace)
+                            .onTapGesture {
+                                if file.isDirectory {
+                                    withAnimation {
+                                        webDAVController.parents[file] = directory
+                                        directory = file
+                                        load()
+                                    }
                                 }
-                            } label: {
-                                FileCell(file: file, ns: namespace)
                             }
-                        } else {
-                            FileCell(file: file, ns : namespace)
-                        }
                     }
                 } else {
                     HStack {
