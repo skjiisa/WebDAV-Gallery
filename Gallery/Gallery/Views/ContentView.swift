@@ -15,15 +15,17 @@ struct ContentView: View {
     private var accounts: FetchedResults<Account>
     
     @StateObject private var webDAVController = WebDAVController()
+    @StateObject private var pathController = PathController()
     
     @State private var showingSettings = false
     
     var body: some View {
-        NavigationView {
+//        NavigationView {
             Group {
                 if let account = accounts.first {
                     FileBrowserView()
                         .environmentObject(account)
+                        .environmentObject(pathController)
                 } else {
                     Text("Please add an account")
                 }
@@ -47,7 +49,7 @@ struct ContentView: View {
                     .environmentObject(webDAVController)
                 }
             }
-        }
+//        }
         .environmentObject(webDAVController)
     }
 }

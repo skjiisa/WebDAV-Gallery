@@ -10,6 +10,7 @@
 		59136F1725AE699400E7AD25 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 59136F1625AE699400E7AD25 /* KeychainSwift */; };
 		59136F1A25AE6BCE00E7AD25 /* Gallery+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59136F1925AE6BCE00E7AD25 /* Gallery+Convenience.swift */; };
 		591BA4DA25CA1E9E0014C2AA /* ScrollView+Fix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591BA4D925CA1E9E0014C2AA /* ScrollView+Fix.swift */; };
+		5924325026127CEB0011B492 /* PathController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5924324F26127CEB0011B492 /* PathController.swift */; };
 		59342C0B25AD0817000BD333 /* GalleryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59342C0A25AD0817000BD333 /* GalleryApp.swift */; };
 		59342C0D25AD0817000BD333 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59342C0C25AD0817000BD333 /* ContentView.swift */; };
 		59342C0F25AD0819000BD333 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 59342C0E25AD0819000BD333 /* Assets.xcassets */; };
@@ -32,6 +33,7 @@
 /* Begin PBXFileReference section */
 		59136F1925AE6BCE00E7AD25 /* Gallery+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gallery+Convenience.swift"; sourceTree = "<group>"; };
 		591BA4D925CA1E9E0014C2AA /* ScrollView+Fix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScrollView+Fix.swift"; sourceTree = "<group>"; };
+		5924324F26127CEB0011B492 /* PathController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathController.swift; sourceTree = "<group>"; };
 		59342C0725AD0817000BD333 /* Gallery.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gallery.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		59342C0A25AD0817000BD333 /* GalleryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryApp.swift; sourceTree = "<group>"; };
 		59342C0C25AD0817000BD333 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -121,6 +123,7 @@
 			children = (
 				59342C1325AD0819000BD333 /* Persistence.swift */,
 				59342C4025AD1437000BD333 /* WebDAVController.swift */,
+				5924324F26127CEB0011B492 /* PathController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -234,6 +237,7 @@
 				59342C0D25AD0817000BD333 /* ContentView.swift in Sources */,
 				597B595425CDE8EF00D30ACE /* ZoomButtons.swift in Sources */,
 				59342C0B25AD0817000BD333 /* GalleryApp.swift in Sources */,
+				5924325026127CEB0011B492 /* PathController.swift in Sources */,
 				59342C3E25AD13B1000BD333 /* AccountView.swift in Sources */,
 				591BA4DA25CA1E9E0014C2AA /* ScrollView+Fix.swift in Sources */,
 				59136F1A25AE6BCE00E7AD25 /* Gallery+Convenience.swift in Sources */,

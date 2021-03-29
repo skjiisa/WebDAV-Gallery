@@ -14,29 +14,15 @@ struct FileBrowserView: View {
     
     //MARK: Properties
     
-    @Environment(\.managedObjectContext) private var moc
-    
     @EnvironmentObject private var webDAVController: WebDAVController
-    @EnvironmentObject private var account: Account
-    
-    var title: String?
+    @EnvironmentObject private var pathController: PathController
     
     @Namespace private var namespace
     
-    @State private var directory: WebDAVFile?
-    @State private var fetchingFiles = false
     @State private var numColumns: Int = 2
     
     @State private var offset: CGFloat = 0.0
     @State private var x: CGFloat = 0.0
-    
-    var contents: [WebDAVFile]? {
-        webDAVController.files(for: account, at: directory?.path ?? "/")
-    }
-    
-    private var columns: [GridItem] {
-        (0..<(contents == nil ? 1 : numColumns)).map { _ in GridItem(spacing: 0) }
-    }
     
     //MARK: Views
     
@@ -44,7 +30,7 @@ struct FileBrowserView: View {
     
     private var backGesture: some Gesture {
         DragGesture().onChanged{ value in
-            guard directory != nil else { return }
+            guard pathController.path.count > 1 else { return }
             if x == 0 && offset == 0 && value.location.x < 100 {
                 withAnimation(.interactiveSpring()) {
                     offset = 100
@@ -56,7 +42,9 @@ struct FileBrowserView: View {
         }.onEnded { value in
             // -8 to add some leniency
             if x + offset > width/2 - 8 {
-                back()
+                withAnimation {
+                    pathController.back()
+                }
             }
             withAnimation(.spring()) {
                 x = 0
@@ -82,20 +70,57 @@ struct FileBrowserView: View {
     //MARK: Body
     
     var body: some View {
-        ScrollView(.vertical) {
-            LazyVGrid(columns: columns) {
-                if let files = contents {
-                    ForEach(files) { file in
-                        FileCell(file: file, ns : namespace)
-                            .onTapGesture {
-                                if file.isDirectory {
-                                    withAnimation {
-                                        webDAVController.parents[file] = directory
-                                        directory = file
-                                        load()
+        ZStack {
+            // This exists because otherwise the .transition doesn't play on the way out
+            // See https://sarunw.com/posts/how-to-fix-zstack-transition-animation-in-swiftui/
+            Text("A")
+                .opacity(0)
+                .zIndex(1)
+            
+            ForEach(Array(pathController.path.enumerated()), id: \.offset) { index, dir in
+                DirectoryView(directory: pathController.paths[index], title: dir == "/" ? "Gallery" : dir, numColumns: $numColumns)
+                    .transition(.move(edge: .trailing))
+            }
+        }
+        .gesture(backGesture)
+        .overlay(backArrow.offset(x: x - width + offset))
+    }
+    
+}
+
+//MARK: DirectoryView
+
+struct DirectoryView: View {
+    
+    @EnvironmentObject private var webDAVController: WebDAVController
+    @EnvironmentObject private var pathController: PathController
+    @EnvironmentObject private var account: Account
+    
+    var directory: String
+    var title: String
+    @Binding var numColumns: Int
+    
+    @State private var fetchingFiles = false
+    
+    private var columns: [GridItem] {
+        (0..<numColumns).map { _ in GridItem(spacing: 0) }
+    }
+    
+    var body: some View {
+        NavigationView {
+            ScrollView(.vertical) {
+                if let files = webDAVController.files(for: account, at: directory) {
+                    LazyVGrid(columns: columns) {
+                        ForEach(files) { file in
+                            FileCell(file: file)
+                                .onTapGesture {
+                                    if file.isDirectory {
+                                        withAnimation {
+                                            pathController.push(dir: file.fileName)
+                                        }
                                     }
                                 }
-                            }
+                        }
                     }
                 } else {
                     HStack {
@@ -105,23 +130,24 @@ struct FileBrowserView: View {
                     }
                 }
             }
-        }
-        .fixFlickering()
-        .navigationTitle(title ?? "Gallery")
-        .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                ZoomButtons(numColumns: $numColumns)
-            }
-            ToolbarItem(placement: .navigation) {
-                if directory != nil {
-                    Button("Back", action: back)
+            .fixFlickering()
+            .navigationTitle(title)
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    ZoomButtons(numColumns: $numColumns)
+                }
+                ToolbarItem(placement: .navigation) {
+                    if directory != "/" {
+                        Button("Back") {
+                            withAnimation {
+                                pathController.back()
+                            }
+                        }
+                    }
                 }
             }
         }
         .onAppear(perform: load)
-        
-        .gesture(backGesture)
-        .overlay(backArrow.offset(x: x - width + offset))
     }
     
     //MARK: Functions
@@ -129,25 +155,13 @@ struct FileBrowserView: View {
     private func load() {
         if !fetchingFiles {
             fetchingFiles = true
-            webDAVController.listSupportedFiles(atPath: directory?.path ?? "/", account: account) { error in
+            webDAVController.listSupportedFiles(atPath: directory, account: account) { error in
                 DispatchQueue.main.async {
                     fetchingFiles = false
                 }
             }
         }
     }
-    
-    private func back() {
-        withAnimation {
-            if let directory = self.directory {
-                self.directory = webDAVController.parents[directory]
-            } else {
-                self.directory = nil
-            }
-        }
-        load()
-    }
-    
 }
 
 //MARK: FileCell
@@ -161,7 +175,7 @@ struct FileCell: View {
     
     var file: WebDAVFile
     var compact = false
-    var ns: Namespace.ID
+//    var ns: Namespace.ID
     
     @State private var requestID: String?
     @State private var fetchingFiles = false
@@ -183,7 +197,7 @@ struct FileCell: View {
                         LazyVGrid(columns: [GridItem(), GridItem()]) {
                             ForEach(0..<4) { index in
                                 if index < images.count {
-                                    FileCell(file: images[index], compact: true, ns: ns)
+                                    FileCell(file: images[index], compact: true/*, ns: ns*/)
                                 }
                             }
                         }
@@ -217,7 +231,7 @@ struct FileCell: View {
                 .overlay(imageOverlay)
                 .cornerRadius(compact ? 4 : 8)
                 .clipped()
-                .matchedGeometryEffect(id: file.id, in: ns)
+//                .matchedGeometryEffect(id: file.id, in: ns)
             
             if !compact {
                 Text(file.fileName)
