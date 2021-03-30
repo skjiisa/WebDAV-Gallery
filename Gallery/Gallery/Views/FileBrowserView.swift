@@ -42,7 +42,7 @@ struct FileBrowserView: View {
         }.onEnded { value in
             // -8 to add some leniency
             if x + offset > width/2 - 8 {
-                withAnimation {
+                withAnimation(.push) {
                     pathController.back()
                 }
             }
@@ -115,7 +115,7 @@ struct DirectoryView: View {
                             FileCell(file: file)
                                 .onTapGesture {
                                     if file.isDirectory {
-                                        withAnimation {
+                                        withAnimation(.push) {
                                             pathController.push(dir: file.fileName)
                                         }
                                     }
@@ -139,7 +139,7 @@ struct DirectoryView: View {
                 ToolbarItem(placement: .navigation) {
                     if directory != "/" {
                         Button("Back") {
-                            withAnimation {
+                            withAnimation(.push) {
                                 pathController.back()
                             }
                         }
