@@ -18,9 +18,15 @@ class WebDAVController: ObservableObject {
     private var passwordCache: [UUID: String] = [:]
     
     @Published var files: [AccountPath: [WebDAVFile]] = [:]
+    @Published var images: [AccountPath: [WebDAVFile]] = [:]
+    var parents: [WebDAVFile: WebDAVFile] = [:]
     
     func files(for account: Account, at path: String) -> [WebDAVFile]? {
         files[AccountPath(account: account, path: path)]
+    }
+    
+    func images(for account: Account, at path: String) -> [WebDAVFile]? {
+        images[AccountPath(account: account, path: path)]
     }
     
     var unsupportedThumbnailSizeLimit: Int {
@@ -121,10 +127,12 @@ class WebDAVController: ObservableObject {
                     if self?.files[accountPath] == nil {
                         // If this is the initial fetch, don't animate it.
                         self?.files[accountPath] = files
+                        self?.images[accountPath] = files.filter { !$0.isDirectory }
                     } else {
                         // If it's updating and existing directory, animate the change.
                         withAnimation {
                             self?.files[accountPath] = files
+                            self?.images[accountPath] = files.filter { !$0.isDirectory }
                         }
                     }
                 }
@@ -186,12 +194,15 @@ class WebDAVController: ObservableObject {
     //MARK: AccountPath
     
     struct AccountPath: Hashable {
+        static let slash = CharacterSet(charactersIn: "/")
+        
         var account: Account
         var path: String
-        //TODO: write a custom initializer that modifies the path to a standard format
-        // For example, /path/, /path, path, and path/ will all give the same results
-        // from a `listFiles` call, but will generate different AccountPaths and thus
-        // different `files` dictionary keys.
+        
+        init(account: Account, path: String) {
+            self.account = account
+            self.path = path.trimmingCharacters(in: WebDAVController.AccountPath.slash)
+        }
     }
     
 }
