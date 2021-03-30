@@ -20,37 +20,41 @@ struct ContentView: View {
     @State private var showingSettings = false
     
     var body: some View {
-//        NavigationView {
-            Group {
-                if let account = accounts.first {
-                    FileBrowserView()
-                        .environmentObject(account)
-                        .environmentObject(pathController)
-                } else {
-                    Text("Please add an account")
-                }
-            }
-            .toolbar {
-                Button {
-                    showingSettings = true
-                } label: {
-                    Image(systemName: "gear")
-                }
-                .sheet(isPresented: $showingSettings) {
-                    NavigationView {
-                        SettingsView()
-                            .toolbar {
-                                Button("Done") {
-                                    showingSettings = false
-                                }
-                            }
+        Group {
+            if let account = accounts.first {
+                FileBrowserView(showingSettings: $showingSettings)
+                    .environmentObject(account)
+                    .environmentObject(pathController)
+            } else {
+                NavigationView {
+                    VStack {
+                        Text("Please add an account")
                     }
-                    .environment(\.managedObjectContext, moc)
-                    .environmentObject(webDAVController)
+                    .navigationTitle("Gallery")
+                    .toolbar {
+                        Button {
+                            showingSettings = true
+                        } label: {
+                            Image(systemName: "gear")
+                                .imageScale(.large)
+                        }
+                    }
                 }
             }
-//        }
+        }
         .environmentObject(webDAVController)
+        .sheet(isPresented: $showingSettings) {
+            NavigationView {
+                SettingsView()
+                    .toolbar {
+                        Button("Done") {
+                            showingSettings = false
+                        }
+                    }
+            }
+            .environment(\.managedObjectContext, moc)
+            .environmentObject(webDAVController)
+        }
     }
 }
 
