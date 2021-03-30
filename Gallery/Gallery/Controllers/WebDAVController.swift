@@ -194,12 +194,15 @@ class WebDAVController: ObservableObject {
     //MARK: AccountPath
     
     struct AccountPath: Hashable {
+        static let slash = CharacterSet(charactersIn: "/")
+        
         var account: Account
         var path: String
-        //TODO: write a custom initializer that modifies the path to a standard format
-        // For example, /path/, /path, path, and path/ will all give the same results
-        // from a `listFiles` call, but will generate different AccountPaths and thus
-        // different `files` dictionary keys.
+        
+        init(account: Account, path: String) {
+            self.account = account
+            self.path = path.trimmingCharacters(in: WebDAVController.AccountPath.slash)
+        }
     }
     
 }

@@ -24,7 +24,7 @@ class PathController: ObservableObject {
         }
         
         path.append(dir)
-        paths.append("/" + path.dropFirst().joined(separator: "/"))
+        paths.append(path.dropFirst().joined(separator: "/"))
     }
     
     func back() {
