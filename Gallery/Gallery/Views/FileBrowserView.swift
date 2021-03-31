@@ -31,7 +31,7 @@ struct FileBrowserView: View {
     let width = UIScreen.main.bounds.width
     
     private var backGesture: some Gesture {
-        DragGesture().onChanged{ value in
+        DragGesture().onChanged { value in
             guard pathController.path.count > 1 else { return }
             if x == 0 && offset == 0 && value.location.x < 100 {
                 withAnimation(.interactiveSpring()) {
@@ -121,6 +121,8 @@ struct DirectoryView: View {
                                         withAnimation(.push) {
                                             pathController.push(dir: file.fileName)
                                         }
+                                    } else {
+                                        pathController.select(file: file)
                                     }
                                 }
                         }

@@ -25,6 +25,13 @@ struct ContentView: View {
                 FileBrowserView(showingSettings: $showingSettings)
                     .environmentObject(account)
                     .environmentObject(pathController)
+                    .sheet(item: $pathController.file) { file in
+                        NavigationView {
+                            ImageView(file: file)
+                                .environmentObject(webDAVController)
+                                .environmentObject(account)
+                        }
+                    }
             } else {
                 NavigationView {
                     VStack {
@@ -43,6 +50,8 @@ struct ContentView: View {
             }
         }
         .environmentObject(webDAVController)
+        
+        EmptyView()
         .sheet(isPresented: $showingSettings) {
             NavigationView {
                 SettingsView()
