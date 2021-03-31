@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5901B5B8261413F900E4575A /* AlbumsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5901B5B7261413F900E4575A /* AlbumsView.swift */; };
 		59136F1725AE699400E7AD25 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 59136F1625AE699400E7AD25 /* KeychainSwift */; };
 		59136F1A25AE6BCE00E7AD25 /* Gallery+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59136F1925AE6BCE00E7AD25 /* Gallery+Convenience.swift */; };
 		591BA4DA25CA1E9E0014C2AA /* ScrollView+Fix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591BA4D925CA1E9E0014C2AA /* ScrollView+Fix.swift */; };
@@ -32,6 +33,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5901B5B7261413F900E4575A /* AlbumsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumsView.swift; sourceTree = "<group>"; };
 		59136F1925AE6BCE00E7AD25 /* Gallery+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gallery+Convenience.swift"; sourceTree = "<group>"; };
 		591BA4D925CA1E9E0014C2AA /* ScrollView+Fix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScrollView+Fix.swift"; sourceTree = "<group>"; };
 		5924324F26127CEB0011B492 /* PathController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathController.swift; sourceTree = "<group>"; };
@@ -116,6 +118,7 @@
 				59342C2A25AD092A000BD333 /* SettingsView.swift */,
 				59342C3D25AD13B1000BD333 /* AccountView.swift */,
 				597B595625CDEC9700D30ACE /* ImageView.swift */,
+				5901B5B7261413F900E4575A /* AlbumsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -236,6 +239,7 @@
 				59342C2B25AD092A000BD333 /* SettingsView.swift in Sources */,
 				59342C2E25AD0951000BD333 /* FileBrowserView.swift in Sources */,
 				59342C2825AD0892000BD333 /* Gallery.xcdatamodeld in Sources */,
+				5901B5B8261413F900E4575A /* AlbumsView.swift in Sources */,
 				59342C1425AD0819000BD333 /* Persistence.swift in Sources */,
 				59342C4125AD1437000BD333 /* WebDAVController.swift in Sources */,
 				59342C0D25AD0817000BD333 /* ContentView.swift in Sources */,
