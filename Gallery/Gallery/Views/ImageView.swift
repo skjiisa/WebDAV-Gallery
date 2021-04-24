@@ -36,7 +36,7 @@ struct ImageView: View {
             if !startedFetch {
                 startedFetch = true
                 
-                webDAVController.getThumbnail(for: file, account: account) { image, _, error in
+                webDAVController.getThumbnail(for: file, account: account) { image, error in
                     if let error = error {
                         NSLog(error.localizedDescription)
                     }
@@ -48,7 +48,7 @@ struct ImageView: View {
                         }
                     }
                 }
-                webDAVController.getImage(for: file, account: account) { image, _, error in
+                webDAVController.getImage(for: file, account: account) { image, error in
                     if let error = error {
                         NSLog(error.localizedDescription)
                     }

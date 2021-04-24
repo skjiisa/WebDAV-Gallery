@@ -141,38 +141,38 @@ class WebDAVController: ObservableObject {
         }
     }
     
-    func getImage(for file: WebDAVFile, account: Account, completion: @escaping (_ image: UIImage?, _ cachedImageURL: URL?, _ error: WebDAVError?) -> Void) {
-        guard let password = getPassword(for: account) else { return completion(nil, nil, .invalidCredentials) }
+    func getImage(for file: WebDAVFile, account: Account, completion: @escaping (_ image: UIImage?, _ error: WebDAVError?) -> Void) {
+        guard let password = getPassword(for: account) else { return completion(nil, .invalidCredentials) }
         webDAV.downloadImage(path: file.path, account: account, password: password, completion: completion)
     }
     
     @discardableResult
-    func getThumbnail(for file: WebDAVFile, account: Account, completion: @escaping (_ image: UIImage?, _ cachedImageURL: URL?, _ error: WebDAVError?) -> Void) -> String? {
+    func getThumbnail(for file: WebDAVFile, account: Account, completion: @escaping (_ image: UIImage?, _ error: WebDAVError?) -> Void) -> URLSessionDataTask? {
         // Don't try getting thumbnail for image that doesn't support it.
         if WebDAVController.thumbnailExtensions.contains(file.extension) {
             guard let password = getPassword(for: account) else {
-                completion(nil, nil, .invalidCredentials)
+                completion(nil, .invalidCredentials)
                 return nil
             }
-            return webDAV.downloadThumbnail(path: file.path, account: account, password: password, with: CGSize(width: 256, height: 256), completion: completion)
+            return webDAV.downloadThumbnail(path: file.path, account: account, password: password, with: .init((width: 256, height: 256), contentMode: .fill), completion: completion)
         }
         
+        // If the full-size image has already been cached, return that.
         if let cachedImage = webDAV.getCachedImage(forItemAtPath: file.path, account: account) {
-            // If the full-size image has already been cached, return that.
-            completion(cachedImage, try? webDAV.getCachedDataURL(forItemAtPath: file.path, account: account), nil)
+            completion(cachedImage, nil)
             return nil
         }
         
+        // If the full-size image is under the specified limit, just fetch that instead.
         if file.size < unsupportedThumbnailSizeLimit {
-            // If the full-size image is under the specified limit, just fetch that instead.
             guard let password = getPassword(for: account) else {
-                completion(nil, nil, .invalidCredentials)
+                completion(nil, .invalidCredentials)
                 return nil
             }
             return webDAV.downloadImage(path: file.path, account: account, password: password, completion: completion)
         }
         
-        completion(nil, nil, nil)
+        completion(nil, nil)
         return nil
     }
     
