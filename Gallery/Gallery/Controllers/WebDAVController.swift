@@ -141,13 +141,13 @@ class WebDAVController: ObservableObject {
         }
     }
     
-    func getImage(for file: WebDAVFile, account: Account, preview: WebDAV.ThumbnailPreviewMode?, completion: @escaping (_ image: UIImage?, _ error: WebDAVError?) -> Void) {
+    func getImage(for file: File, account: Account, preview: WebDAV.ThumbnailPreviewMode?, completion: @escaping (_ image: UIImage?, _ error: WebDAVError?) -> Void) {
         guard let password = getPassword(for: account) else { return completion(nil, .invalidCredentials) }
         webDAV.downloadImage(path: file.path, account: account, password: password, preview: preview, completion: completion)
     }
     
     @discardableResult
-    func getThumbnail(for file: WebDAVFile, account: Account, completion: @escaping (_ image: UIImage?, _ error: WebDAVError?) -> Void) -> URLSessionDataTask? {
+    func getThumbnail(for file: File, account: Account, completion: @escaping (_ image: UIImage?, _ error: WebDAVError?) -> Void) -> URLSessionDataTask? {
         // Don't try getting thumbnail for image that doesn't support it.
         if WebDAVController.thumbnailExtensions.contains(file.extension) {
             guard let password = getPassword(for: account) else {
