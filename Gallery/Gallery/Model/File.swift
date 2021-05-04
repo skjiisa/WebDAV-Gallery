@@ -13,6 +13,7 @@ protocol File {
     var isDirectory: Bool { get }
     var size: Int { get }
     var `extension`: String { get }
+    var fileName: String { get }
 }
 
 extension WebDAVFile: File {}
@@ -29,7 +30,15 @@ extension ImageItem: File {
         Int(imageSize)
     }
     
+    var fileURL: URL {
+        URL(fileURLWithPath: path)
+    }
+    
     var `extension`: String {
-        URL(fileURLWithPath: path).pathExtension
+        fileURL.pathExtension
+    }
+    
+    var fileName: String {
+        fileURL.lastPathComponent
     }
 }
