@@ -11,15 +11,6 @@
         }
       },
       {
-        "package": "Networking",
-        "repositoryURL": "https://github.com/3lvis/Networking.git",
-        "state": {
-          "branch": null,
-          "revision": "dde4d21fcc774d988da1f842bc4582ce7f9593c2",
-          "version": "5.1.0"
-        }
-      },
-      {
         "package": "SWXMLHash",
         "repositoryURL": "https://github.com/drmohundro/SWXMLHash.git",
         "state": {
@@ -33,8 +24,8 @@
         "repositoryURL": "https://github.com/Isvvc/WebDAV-Swift.git",
         "state": {
           "branch": null,
-          "revision": "08bbd8e2ddd5c466ad78281d737bcfc8c8a4e009",
-          "version": "2.1.1"
+          "revision": "375187f61317523530700b51331f121a5532b310",
+          "version": "3.1.1"
         }
       }
     ]

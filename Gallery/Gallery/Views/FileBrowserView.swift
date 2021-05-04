@@ -191,7 +191,7 @@ struct FileCell: View {
     var compact = false
 //    var ns: Namespace.ID
     
-    @State private var requestID: String?
+    @State private var request: URLSessionDataTask?
     @State private var fetchingFiles = false
     @State private var finishedFetch = false
     @State private var image: UIImage?
@@ -261,9 +261,9 @@ struct FileCell: View {
             }
         }
         .onDisappear {
-            if let requestID = requestID {
-                webDAVController.webDAV.cancelRequest(id: requestID, account: account)
-                self.requestID = nil
+            if let request = request {
+                request.cancel()
+                self.request = nil
             }
         }
     }
@@ -271,17 +271,17 @@ struct FileCell: View {
     //MARK: Functions
     
     private func fetchImage() {
-        guard requestID == nil,
+        guard request == nil,
               image == nil,
               // These are simply previews and don't need to bother
               // updating if there's already cached content.
               webDAVController.images(for: account, at: file.path) == nil else { return }
-        requestID = webDAVController.getThumbnail(for: file, account: account) { image, _, error in
+        request = webDAVController.getThumbnail(for: file, account: account) { image, error in
             if let error = error {
                 NSLog(error.localizedDescription)
             }
             DispatchQueue.main.async {
-                requestID = nil
+                request = nil
                 finishedFetch = true
                 self.image = image
             }

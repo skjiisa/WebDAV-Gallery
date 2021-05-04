@@ -36,29 +36,28 @@ struct ImageView: View {
             if !startedFetch {
                 startedFetch = true
                 
-                webDAVController.getThumbnail(for: file, account: account) { image, _, error in
-                    if let error = error {
-                        NSLog(error.localizedDescription)
-                    }
-                    // Don't set the thumbnail as the image if
-                    // the full-size image has already been set.
-                    if self.image == nil {
-                        DispatchQueue.main.async {
-                            self.image = image
+                webDAVController.getImage(for: file, account: account, preview: .memoryOnly) { image, error in
+                    switch error {
+                    // Cached thumbnail returned
+                    case .placeholder:
+                        if self.image == nil {
+                            DispatchQueue.main.async {
+                                self.image = image
+                            }
                         }
-                    }
-                }
-                webDAVController.getImage(for: file, account: account) { image, _, error in
-                    if let error = error {
-                        NSLog(error.localizedDescription)
-                    }
-                    // Don't override the thumbnail if
-                    // the full-size image didn't fetch.
-                    if let image = image {
-                        DispatchQueue.main.async {
-                            self.image = image
-                            self.finishedFetch = true
+                        
+                    // Full-size image fetched
+                    case .none:
+                        if let image = image {
+                            DispatchQueue.main.async {
+                                self.image = image
+                            }
                         }
+                        self.finishedFetch = true
+                        
+                    // Error logged
+                    case .some(let unexpectedError):
+                        NSLog(unexpectedError.localizedDescription)
                     }
                 }
             }
