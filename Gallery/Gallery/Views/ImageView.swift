@@ -55,7 +55,7 @@ struct ImageView: View {
                         }
                         self.finishedFetch = true
                         
-                    // Error logged
+                    // Log the error
                     case .some(let unexpectedError):
                         NSLog(unexpectedError.localizedDescription)
                     }

@@ -12,6 +12,8 @@
 		59136F1A25AE6BCE00E7AD25 /* Gallery+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59136F1925AE6BCE00E7AD25 /* Gallery+Convenience.swift */; };
 		591BA4DA25CA1E9E0014C2AA /* ScrollView+Fix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591BA4D925CA1E9E0014C2AA /* ScrollView+Fix.swift */; };
 		59242AF226411B1800477C49 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59242AF126411B1800477C49 /* File.swift */; };
+		59242AF42641220600477C49 /* FileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59242AF32641220600477C49 /* FileCell.swift */; };
+		59242AF6264122C800477C49 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59242AF5264122C800477C49 /* ImageLoader.swift */; };
 		5924325026127CEB0011B492 /* PathController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5924324F26127CEB0011B492 /* PathController.swift */; };
 		59342C0B25AD0817000BD333 /* GalleryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59342C0A25AD0817000BD333 /* GalleryApp.swift */; };
 		59342C0D25AD0817000BD333 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59342C0C25AD0817000BD333 /* ContentView.swift */; };
@@ -38,6 +40,8 @@
 		59136F1925AE6BCE00E7AD25 /* Gallery+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gallery+Convenience.swift"; sourceTree = "<group>"; };
 		591BA4D925CA1E9E0014C2AA /* ScrollView+Fix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScrollView+Fix.swift"; sourceTree = "<group>"; };
 		59242AF126411B1800477C49 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
+		59242AF32641220600477C49 /* FileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileCell.swift; sourceTree = "<group>"; };
+		59242AF5264122C800477C49 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
 		5924324F26127CEB0011B492 /* PathController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathController.swift; sourceTree = "<group>"; };
 		59342C0725AD0817000BD333 /* Gallery.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gallery.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		59342C0A25AD0817000BD333 /* GalleryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryApp.swift; sourceTree = "<group>"; };
@@ -117,6 +121,7 @@
 			children = (
 				59342C0C25AD0817000BD333 /* ContentView.swift */,
 				59342C2D25AD0951000BD333 /* FileBrowserView.swift */,
+				59242AF32641220600477C49 /* FileCell.swift */,
 				59342C2A25AD092A000BD333 /* SettingsView.swift */,
 				59342C3D25AD13B1000BD333 /* AccountView.swift */,
 				597B595625CDEC9700D30ACE /* ImageView.swift */,
@@ -131,6 +136,7 @@
 				59342C1325AD0819000BD333 /* Persistence.swift */,
 				59342C4025AD1437000BD333 /* WebDAVController.swift */,
 				5924324F26127CEB0011B492 /* PathController.swift */,
+				59242AF5264122C800477C49 /* ImageLoader.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -245,12 +251,14 @@
 				59342C2825AD0892000BD333 /* Gallery.xcdatamodeld in Sources */,
 				5901B5B8261413F900E4575A /* AlbumsView.swift in Sources */,
 				59342C1425AD0819000BD333 /* Persistence.swift in Sources */,
+				59242AF42641220600477C49 /* FileCell.swift in Sources */,
 				59342C4125AD1437000BD333 /* WebDAVController.swift in Sources */,
 				59342C0D25AD0817000BD333 /* ContentView.swift in Sources */,
 				597B595425CDE8EF00D30ACE /* ZoomButtons.swift in Sources */,
 				59342C0B25AD0817000BD333 /* GalleryApp.swift in Sources */,
 				5924325026127CEB0011B492 /* PathController.swift in Sources */,
 				59342C3E25AD13B1000BD333 /* AccountView.swift in Sources */,
+				59242AF6264122C800477C49 /* ImageLoader.swift in Sources */,
 				591BA4DA25CA1E9E0014C2AA /* ScrollView+Fix.swift in Sources */,
 				59136F1A25AE6BCE00E7AD25 /* Gallery+Convenience.swift in Sources */,
 				59342C3525AD0A83000BD333 /* Gallery+Wrapping.swift in Sources */,
