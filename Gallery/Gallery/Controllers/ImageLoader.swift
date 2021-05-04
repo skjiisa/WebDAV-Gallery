@@ -18,7 +18,7 @@ class ImageLoader: ObservableObject {
     private var loaded = false
     private var task: URLSessionDataTask?
     
-    func load(file: File, webDAVController: WebDAVController, account: Account, thumbnail: Bool) {
+    func load(file: File, webDAVController: WebDAVController, account: Account, thumbnail: Bool = false) {
         guard !loaded else { return }
         loaded = true
         if file.isDirectory {

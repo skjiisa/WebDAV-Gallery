@@ -36,7 +36,6 @@ struct FileBrowserView: View {
             if x == 0 && offset == 0 && value.location.x < 100 {
                 withAnimation(.interactiveSpring()) {
                     offset = 100
-                    print(offset)
                 }
             } else {
                 x = min(value.translation.width, width/2 - offset)

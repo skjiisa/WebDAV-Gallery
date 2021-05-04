@@ -15,11 +15,11 @@ struct FileCell: View {
     @EnvironmentObject private var webDAVController: WebDAVController
     @EnvironmentObject private var account: Account
     
-    @StateObject private var imageLoader = ImageLoader()
-    
     var file: File?
     var album: Album?
     var compact = false
+    
+    @StateObject private var imageLoader = ImageLoader()
     
     init(file: File, compact: Bool = false) {
         self.file = file
