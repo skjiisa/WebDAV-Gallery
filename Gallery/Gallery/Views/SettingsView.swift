@@ -94,5 +94,6 @@ struct SettingsView_Previews: PreviewProvider {
             SettingsView()
         }
         .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+        .environmentObject(WebDAVController())
     }
 }

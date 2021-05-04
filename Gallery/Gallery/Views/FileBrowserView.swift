@@ -260,7 +260,6 @@ struct FileCell: View {
         }
         .onDisappear {
             if let request = request {
-//                webDAVController.webDAV.cancelRequest(id: requestID, account: account)
                 request.cancel()
                 self.request = nil
             }
