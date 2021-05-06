@@ -8,6 +8,8 @@
 import SwiftUI
 import WebDAV
 
+//MARK: FileCell
+
 struct FileCell: View {
     
     //MARK: Properties
@@ -88,8 +90,12 @@ struct FileCell: View {
                 .clipped()
             
             if !compact {
-                Text(file?.fileName ?? album?.name ?? "")
-                    .lineLimit(1)
+                if let album = album {
+                    AlbumNameView(album: album)
+                } else {
+                    Text(file?.fileName ?? "")
+                        .lineLimit(1)
+                }
             }
         }
         .padding(compact ? 4 : 8)
@@ -108,6 +114,22 @@ struct FileCell: View {
         }
     }
 }
+
+//MARK: AlbumNameView
+
+/// This exists because if Album isn't observed, the name won't
+/// update when the user changes it until the cell is reloaded.
+/// Because `album` is optional in `FileCell`, it can't be an `ObservedObject`.
+fileprivate struct AlbumNameView: View {
+    @ObservedObject var album: Album
+    
+    var body: some View {
+        Text(album.wrappedName)
+            .lineLimit(1)
+    }
+}
+
+//MARK: Previews
 
 /*
 struct FileCell_Previews: PreviewProvider {
