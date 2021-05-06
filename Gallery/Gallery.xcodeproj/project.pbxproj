@@ -32,6 +32,8 @@
 		597B595425CDE8EF00D30ACE /* ZoomButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 597B595325CDE8EF00D30ACE /* ZoomButtons.swift */; };
 		597B595725CDEC9700D30ACE /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 597B595625CDEC9700D30ACE /* ImageView.swift */; };
 		599B60DA25CE0CFD00473A02 /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 599B60D925CE0CFD00473A02 /* Defaults.swift */; };
+		59AE179E2644ABC600B33C9F /* AlbumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59AE179D2644ABC600B33C9F /* AlbumView.swift */; };
+		59AE17A02644B3E200B33C9F /* AlbumController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59AE179F2644B3E200B33C9F /* AlbumController.swift */; };
 		59E3056225AE558B00BB855D /* AlertItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E3056125AE558B00BB855D /* AlertItem.swift */; };
 /* End PBXBuildFile section */
 
@@ -61,6 +63,8 @@
 		597B595325CDE8EF00D30ACE /* ZoomButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomButtons.swift; sourceTree = "<group>"; };
 		597B595625CDEC9700D30ACE /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
 		599B60D925CE0CFD00473A02 /* Defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
+		59AE179D2644ABC600B33C9F /* AlbumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumView.swift; sourceTree = "<group>"; };
+		59AE179F2644B3E200B33C9F /* AlbumController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumController.swift; sourceTree = "<group>"; };
 		59E3056125AE558B00BB855D /* AlertItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -126,6 +130,7 @@
 				59342C3D25AD13B1000BD333 /* AccountView.swift */,
 				597B595625CDEC9700D30ACE /* ImageView.swift */,
 				5901B5B7261413F900E4575A /* AlbumsView.swift */,
+				59AE179D2644ABC600B33C9F /* AlbumView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -137,6 +142,7 @@
 				59342C4025AD1437000BD333 /* WebDAVController.swift */,
 				5924324F26127CEB0011B492 /* PathController.swift */,
 				59242AF5264122C800477C49 /* ImageLoader.swift */,
+				59AE179F2644B3E200B33C9F /* AlbumController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -243,6 +249,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5964A9D52612ADB300DAB570 /* Animation+Push.swift in Sources */,
+				59AE179E2644ABC600B33C9F /* AlbumView.swift in Sources */,
 				597B595725CDEC9700D30ACE /* ImageView.swift in Sources */,
 				599B60DA25CE0CFD00473A02 /* Defaults.swift in Sources */,
 				59342C2B25AD092A000BD333 /* SettingsView.swift in Sources */,
@@ -254,6 +261,7 @@
 				59242AF42641220600477C49 /* FileCell.swift in Sources */,
 				59342C4125AD1437000BD333 /* WebDAVController.swift in Sources */,
 				59342C0D25AD0817000BD333 /* ContentView.swift in Sources */,
+				59AE17A02644B3E200B33C9F /* AlbumController.swift in Sources */,
 				597B595425CDE8EF00D30ACE /* ZoomButtons.swift in Sources */,
 				59342C0B25AD0817000BD333 /* GalleryApp.swift in Sources */,
 				5924325026127CEB0011B492 /* PathController.swift in Sources */,

@@ -17,16 +17,16 @@ struct AlbumsView: View {
         animation: .default)
     private var albums: FetchedResults<Album>
     
-    @State private var selection: Album?
-    @State private var newAlbum: Album?
+    @EnvironmentObject private var albumController: AlbumController
     
     var body: some View {
         ScrollView(.vertical) {
             LazyVGrid(columns: [GridItem(), GridItem()]) {
                 ForEach(albums) { album in
-                    Button {
-                        newAlbum = album
-                    } label: {
+                    NavigationLink(
+                        destination: AlbumView(album),
+                        tag: album,
+                        selection: $albumController.selection) {
                         FileCell(album: album)
                     }
                 }
@@ -37,15 +37,15 @@ struct AlbumsView: View {
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button {
-                    newAlbum = Album(context: moc)
+                    albumController.newAlbum = Album(context: moc)
                 } label: {
                     Label("New Album", systemImage: "plus")
                 }
             }
         }
-        .sheet(item: $newAlbum) { album in
+        .sheet(item: $albumController.newAlbum) { album in
             NavigationView {
-                AlbumDetailView(album: album, selection: $newAlbum)
+                AlbumDetailView(album: album, selection: $albumController.newAlbum)
             }
             .environment(\.managedObjectContext, moc)
         }
@@ -56,6 +56,8 @@ struct AlbumDetailView: View {
     
     @Environment(\.managedObjectContext) private var moc
     
+    @EnvironmentObject private var albumController: AlbumController
+    
     @ObservedObject var album: Album
     @Binding var selection: Album?
     
@@ -65,10 +67,7 @@ struct AlbumDetailView: View {
             
             Section {
                 Button {
-                    selection = nil
-                    //TODO: Delete ImageItems
-                    moc.delete(album)
-                    PersistenceController.save(context: moc)
+                    albumController.delete(album, context: moc)
                 } label: {
                     HStack {
                         Spacer()

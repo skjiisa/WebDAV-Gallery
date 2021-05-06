@@ -16,6 +16,7 @@ struct ContentView: View {
     
     @StateObject private var webDAVController = WebDAVController()
     @StateObject private var pathController = PathController()
+    @StateObject private var albumController = AlbumController()
     
     @State private var showingSettings = false
     
@@ -64,6 +65,7 @@ struct ContentView: View {
             }
         }
         .environmentObject(webDAVController)
+        .environmentObject(albumController)
         
         EmptyView()
         .sheet(isPresented: $showingSettings) {
