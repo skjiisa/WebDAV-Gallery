@@ -93,6 +93,8 @@ struct FileBrowserView: View {
 
 struct DirectoryView: View {
     
+    //MARK: Properties
+    
     @EnvironmentObject private var webDAVController: WebDAVController
     @EnvironmentObject private var pathController: PathController
     @EnvironmentObject private var account: Account
@@ -107,6 +109,8 @@ struct DirectoryView: View {
     private var columns: [GridItem] {
         (0..<numColumns).map { _ in GridItem(spacing: 0) }
     }
+    
+    //MARK: Body
     
     var body: some View {
         NavigationView {
