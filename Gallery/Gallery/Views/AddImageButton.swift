@@ -14,8 +14,9 @@ struct AddImageButton: View {
     @EnvironmentObject private var albumController: AlbumController
     
     var image: File
-    var account: Account
+    var account: Account?
     var numColumns: Int
+    var enabled: Bool
     
     var buttonSize: CGFloat {
         CGFloat(80 / numColumns)
@@ -23,8 +24,11 @@ struct AddImageButton: View {
     
     var body: some View {
         Group {
-            if let imagePaths = albumController.imagePaths {
+            if enabled,
+               !image.isDirectory,
+               let imagePaths = albumController.imagePaths {
                 Button {
+                    guard let account = account else { return }
                     albumController.toggleInSelectedAlbum(file: image, account: account, context: moc)
                 } label: {
                     if imagePaths.contains(image.path) {
@@ -51,17 +55,18 @@ struct AddImageButton: View {
 
 fileprivate struct AddImageButtonModifier: ViewModifier {
     var image: File
-    var account: Account
+    var account: Account?
     var numColumns: Int
+    var enabled: Bool
     
     func body(content: Content) -> some View {
-        content.overlay(AddImageButton(image: image, account: account, numColumns: numColumns), alignment: .topTrailing)
+        content.overlay(AddImageButton(image: image, account: account, numColumns: numColumns, enabled: enabled), alignment: .topTrailing)
     }
 }
 
 extension FileCell {
-    func addImageButton(image: File, account: Account, numColumns: Int) -> some View {
-        self.modifier(AddImageButtonModifier(image: image, account: account, numColumns: numColumns))
+    func addImageButton(image: File, numColumns: Int, enabled: Bool = true) -> some View {
+        self.modifier(AddImageButtonModifier(image: image, account: account, numColumns: numColumns, enabled: enabled))
     }
 }
 

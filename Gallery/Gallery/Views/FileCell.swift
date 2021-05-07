@@ -113,9 +113,6 @@ struct FileCell: View {
             if let file = file,
                let account = account {
                 imageLoader.load(file: file, webDAVController: webDAVController, account: account, thumbnail: true)
-                if file.fileName == "Photos" {
-                    print(file)
-                }
             } else if let album = album {
                 imageLoader.load(album: album, webDAVController: webDAVController)
             }

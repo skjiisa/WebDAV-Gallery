@@ -18,6 +18,8 @@ struct AlbumView: View {
     
     @ObservedObject var album: Album
     
+    @State private var editing = false
+    
     init(_ album: Album) {
         self.album = album
         imagesFetchRequest = FetchRequest(
@@ -32,11 +34,19 @@ struct AlbumView: View {
             LazyVGrid(columns: [GridItem(), GridItem()]) {
                 ForEach(images) { image in
                     FileCell(image)
+                        .addImageButton(image: image, numColumns: 2, enabled: editing)
                 }
             }
         }
         .fixFlickering()
         .navigationTitle(album.name ??? "Album")
+        .toolbar {
+            Button(editing ? "Done" : "Edit") {
+                withAnimation {
+                    editing.toggle()
+                }
+            }
+        }
     }
 }
 
