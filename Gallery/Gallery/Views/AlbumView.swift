@@ -49,7 +49,7 @@ struct AlbumView: View {
                     Button {
                         showingProperties = true
                     } label: {
-                        Label("Album settings", systemImage: "pencil")
+                        Label("Album properties", systemImage: "pencil")
                     }
                     .imageScale(.large)
                     .padding(.trailing)

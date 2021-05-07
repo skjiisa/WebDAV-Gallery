@@ -18,14 +18,12 @@ struct ContentView: View {
     @StateObject private var pathController = PathController()
     @StateObject private var albumController = AlbumController()
     
-    @State private var showingSettings = false
-    
     var body: some View {
         TabView {
             // File Browser
             Group {
                 if let account = accounts.first {
-                    FileBrowserView(showingSettings: $showingSettings)
+                    FileBrowserView()
                         .environmentObject(account)
                         .environmentObject(pathController)
                         .sheet(item: $pathController.file) { file in
@@ -41,14 +39,6 @@ struct ContentView: View {
                             Text("Please add an account")
                         }
                         .navigationTitle("Gallery")
-                        .toolbar {
-                            Button {
-                                showingSettings = true
-                            } label: {
-                                Image(systemName: "gear")
-                                    .imageScale(.large)
-                            }
-                        }
                     }
                 }
             }
@@ -63,23 +53,17 @@ struct ContentView: View {
             .tabItem {
                 Label("Albums", systemImage: "photo.fill.on.rectangle.fill")
             }
+            
+            // Settings
+            NavigationView {
+                SettingsView()
+            }
+            .tabItem {
+                Label("Settings", systemImage: "gear")
+            }
         }
         .environmentObject(webDAVController)
         .environmentObject(albumController)
-        
-        EmptyView()
-        .sheet(isPresented: $showingSettings) {
-            NavigationView {
-                SettingsView()
-                    .toolbar {
-                        Button("Done") {
-                            showingSettings = false
-                        }
-                    }
-            }
-            .environment(\.managedObjectContext, moc)
-            .environmentObject(webDAVController)
-        }
     }
 }
 

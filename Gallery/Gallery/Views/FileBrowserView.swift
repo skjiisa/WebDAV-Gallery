@@ -17,10 +17,6 @@ struct FileBrowserView: View {
     @EnvironmentObject private var webDAVController: WebDAVController
     @EnvironmentObject private var pathController: PathController
     
-    @Namespace private var namespace
-    
-    @Binding var showingSettings: Bool
-    
     @State private var numColumns: Int = 2
     
     @State private var offset: CGFloat = 0.0
@@ -79,7 +75,7 @@ struct FileBrowserView: View {
                 .zIndex(1)
             
             ForEach(Array(pathController.path.enumerated()), id: \.offset) { index, dir in
-                DirectoryView(directory: pathController.paths[index], title: dir == "/" ? "Gallery" : dir, numColumns: $numColumns, showingSettings: $showingSettings)
+                DirectoryView(directory: pathController.paths[index], title: dir == "/" ? "Gallery" : dir, numColumns: $numColumns)
                     .transition(.move(edge: .trailing))
             }
         }
@@ -102,7 +98,6 @@ struct DirectoryView: View {
     var directory: String
     var title: String
     @Binding var numColumns: Int
-    @Binding var showingSettings: Bool
     
     @State private var fetchingFiles = false
     
@@ -143,16 +138,8 @@ struct DirectoryView: View {
             .navigationTitle(title)
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
-                    HStack {
-                        ZoomButtons(numColumns: $numColumns)
-                            .padding(.trailing)
-                        Button {
-                            showingSettings = true
-                        } label: {
-                            Image(systemName: "gear")
-                                .imageScale(.large)
-                        }
-                    }
+                    ZoomButtons(numColumns: $numColumns)
+                        .padding(.trailing)
                 }
                 ToolbarItem(placement: .navigation) {
                     if directory != "/" {
@@ -189,7 +176,7 @@ struct FileBrowserView_Previews: PreviewProvider {
     
     static var previews: some View {
         NavigationView {
-            FileBrowserView(showingSettings: .constant(false))
+            FileBrowserView()
         }
         .environment(\.managedObjectContext, moc)
         .environmentObject(WebDAVController())
