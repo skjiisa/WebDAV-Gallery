@@ -25,7 +25,9 @@ class AlbumController: ObservableObject {
         if selection == album {
             selection = nil
         }
-        //TODO: Delete ImageItems
+        
+        album.images?.compactMap { $0 as? NSManagedObject }.forEach(moc.delete)
+        
         moc.delete(album)
         PersistenceController.save(context: moc)
     }
@@ -44,7 +46,7 @@ class AlbumController: ObservableObject {
             imagePaths?.insert(image.path)
         }
         // Uncomment this once there's a way to properly edit Albums
-//        PersistenceController.save(context: moc)
+        PersistenceController.save(context: moc)
     }
     
     private func loadImages() {

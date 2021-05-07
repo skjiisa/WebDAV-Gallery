@@ -16,9 +16,12 @@ struct AlbumView: View {
         imagesFetchRequest.wrappedValue
     }
     
+    @EnvironmentObject private var albumController: AlbumController
+    
     @ObservedObject var album: Album
     
     @State private var editing = false
+    @State private var showingProperties = false
     
     init(_ album: Album) {
         self.album = album
@@ -41,11 +44,30 @@ struct AlbumView: View {
         .fixFlickering()
         .navigationTitle(album.name ??? "Album")
         .toolbar {
-            Button(editing ? "Done" : "Edit") {
-                withAnimation {
-                    editing.toggle()
+            HStack {
+                if editing {
+                    Button {
+                        showingProperties = true
+                    } label: {
+                        Label("Album settings", systemImage: "pencil")
+                    }
+                    .imageScale(.large)
+                    .padding(.trailing)
+                }
+                
+                Button(editing ? "Done" : "Edit") {
+                    withAnimation {
+                        editing.toggle()
+                    }
                 }
             }
+        }
+        .sheet(isPresented: $showingProperties) {
+            NavigationView {
+                AlbumDetailView(album: album, isPresented: $showingProperties)
+            }
+            .environment(\.managedObjectContext, moc)
+            .environmentObject(albumController)
         }
     }
 }
