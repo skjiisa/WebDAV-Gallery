@@ -118,8 +118,8 @@ struct DirectoryView: View {
                 if let files = webDAVController.files(for: account, at: directory) {
                     LazyVGrid(columns: columns) {
                         ForEach(files) { file in
-                            FileCell(file: file)
-                                .addImageButton(image: file, numColumns: numColumns)
+                            FileCell(file, account: account)
+                                .addImageButton(image: file, account: account, numColumns: numColumns)
                                 .onTapGesture {
                                     if file.isDirectory {
                                         withAnimation(.push) {

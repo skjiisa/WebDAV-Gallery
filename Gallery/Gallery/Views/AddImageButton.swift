@@ -8,9 +8,13 @@
 import SwiftUI
 
 struct AddImageButton: View {
+    
+    @Environment(\.managedObjectContext) private var moc
+    
     @EnvironmentObject private var albumController: AlbumController
     
     var image: File
+    var account: Account
     var numColumns: Int
     
     var buttonSize: CGFloat {
@@ -21,7 +25,7 @@ struct AddImageButton: View {
         Group {
             if let imagePaths = albumController.imagePaths {
                 Button {
-                    // Add or remove image
+                    albumController.toggleInSelectedAlbum(file: image, account: account, context: moc)
                 } label: {
                     if imagePaths.contains(image.path) {
                         Image(systemName: "minus.circle.fill")
@@ -42,20 +46,22 @@ struct AddImageButton: View {
             }
         }
     }
+    
 }
 
 fileprivate struct AddImageButtonModifier: ViewModifier {
     var image: File
+    var account: Account
     var numColumns: Int
     
     func body(content: Content) -> some View {
-        content.overlay(AddImageButton(image: image, numColumns: numColumns), alignment: .topTrailing)
+        content.overlay(AddImageButton(image: image, account: account, numColumns: numColumns), alignment: .topTrailing)
     }
 }
 
 extension FileCell {
-    func addImageButton(image: File, numColumns: Int) -> some View {
-        self.modifier(AddImageButtonModifier(image: image, numColumns: numColumns))
+    func addImageButton(image: File, account: Account, numColumns: Int) -> some View {
+        self.modifier(AddImageButtonModifier(image: image, account: account, numColumns: numColumns))
     }
 }
 

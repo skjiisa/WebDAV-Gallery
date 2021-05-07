@@ -8,13 +8,13 @@
     </entity>
     <entity name="Album" representedClassName="Album" syncable="YES" codeGenerationType="class">
         <attribute name="name" optional="YES" attributeType="String"/>
-        <relationship name="images" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="ImageItem" inverseName="albums" inverseEntity="ImageItem"/>
+        <relationship name="images" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="ImageItem" inverseName="album" inverseEntity="ImageItem"/>
     </entity>
     <entity name="ImageItem" representedClassName="ImageItem" syncable="YES" codeGenerationType="class">
         <attribute name="imagePath" optional="YES" attributeType="String"/>
         <attribute name="imageSize" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="account" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Account" inverseName="images" inverseEntity="Account"/>
-        <relationship name="albums" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Album" inverseName="images" inverseEntity="Album"/>
+        <relationship name="album" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Album" inverseName="images" inverseEntity="Album"/>
     </entity>
     <elements>
         <element name="Account" positionX="-63" positionY="-18" width="128" height="89"/>

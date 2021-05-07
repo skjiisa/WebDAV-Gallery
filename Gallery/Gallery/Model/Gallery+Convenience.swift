@@ -27,6 +27,6 @@ extension ImageItem {
         self.imagePath = file.path
         self.imageSize = Int64(file.size)
         self.account = account
-        self.albums = [album]
+        self.album = album
     }
 }

@@ -31,7 +31,7 @@ struct AlbumView: View {
         ScrollView(.vertical) {
             LazyVGrid(columns: [GridItem(), GridItem()]) {
                 ForEach(images) { image in
-                    FileCell(file: image)
+                    FileCell(image)
                 }
             }
         }

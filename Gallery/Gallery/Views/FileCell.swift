@@ -15,17 +15,27 @@ struct FileCell: View {
     //MARK: Properties
     
     @EnvironmentObject private var webDAVController: WebDAVController
-    @EnvironmentObject private var account: Account
     
     var file: File?
+    var account: Account?
     var album: Album?
     var compact = false
     
     @StateObject private var imageLoader = ImageLoader()
     
-    init(file: File, compact: Bool = false) {
+    init(_ file: File, account: Account?, compact: Bool = false) {
         self.file = file
+        if let image = file as? ImageItem {
+            self.account = image.account
+        } else {
+            self.account = account
+        }
         self.compact = compact
+    }
+    
+    init(_ file: ImageItem) {
+        self.file = file
+        self.account = file.account
     }
     
     init(album: Album) {
@@ -52,7 +62,7 @@ struct FileCell: View {
                         LazyVGrid(columns: [GridItem(), GridItem()]) {
                             ForEach(0..<4) { index in
                                 if index < images.count {
-                                    FileCell(file: images[index], compact: true)
+                                    FileCell(images[index], account: account, compact: true)
                                 }
                             }
                         }
@@ -100,7 +110,8 @@ struct FileCell: View {
         }
         .padding(compact ? 4 : 8)
         .onAppear {
-            if let file = file {
+            if let file = file,
+               let account = account {
                 imageLoader.load(file: file, webDAVController: webDAVController, account: account, thumbnail: true)
                 if file.fileName == "Photos" {
                     print(file)
