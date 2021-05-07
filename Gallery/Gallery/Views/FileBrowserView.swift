@@ -119,6 +119,7 @@ struct DirectoryView: View {
                     LazyVGrid(columns: columns) {
                         ForEach(files) { file in
                             FileCell(file: file)
+                                .addImageButton(image: file, numColumns: numColumns)
                                 .onTapGesture {
                                     if file.isDirectory {
                                         withAnimation(.push) {

@@ -34,6 +34,7 @@
 		599B60DA25CE0CFD00473A02 /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 599B60D925CE0CFD00473A02 /* Defaults.swift */; };
 		59AE179E2644ABC600B33C9F /* AlbumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59AE179D2644ABC600B33C9F /* AlbumView.swift */; };
 		59AE17A02644B3E200B33C9F /* AlbumController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59AE179F2644B3E200B33C9F /* AlbumController.swift */; };
+		59AE17A22644BAF000B33C9F /* AddImageButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59AE17A12644BAF000B33C9F /* AddImageButton.swift */; };
 		59E3056225AE558B00BB855D /* AlertItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E3056125AE558B00BB855D /* AlertItem.swift */; };
 /* End PBXBuildFile section */
 
@@ -65,6 +66,7 @@
 		599B60D925CE0CFD00473A02 /* Defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
 		59AE179D2644ABC600B33C9F /* AlbumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumView.swift; sourceTree = "<group>"; };
 		59AE179F2644B3E200B33C9F /* AlbumController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumController.swift; sourceTree = "<group>"; };
+		59AE17A12644BAF000B33C9F /* AddImageButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddImageButton.swift; sourceTree = "<group>"; };
 		59E3056125AE558B00BB855D /* AlertItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -131,6 +133,7 @@
 				597B595625CDEC9700D30ACE /* ImageView.swift */,
 				5901B5B7261413F900E4575A /* AlbumsView.swift */,
 				59AE179D2644ABC600B33C9F /* AlbumView.swift */,
+				59AE17A12644BAF000B33C9F /* AddImageButton.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -269,6 +272,7 @@
 				59242AF6264122C800477C49 /* ImageLoader.swift in Sources */,
 				591BA4DA25CA1E9E0014C2AA /* ScrollView+Fix.swift in Sources */,
 				59136F1A25AE6BCE00E7AD25 /* Gallery+Convenience.swift in Sources */,
+				59AE17A22644BAF000B33C9F /* AddImageButton.swift in Sources */,
 				59342C3525AD0A83000BD333 /* Gallery+Wrapping.swift in Sources */,
 				59E3056225AE558B00BB855D /* AlertItem.swift in Sources */,
 				59342C3925AD0C90000BD333 /* TextWithCaption.swift in Sources */,
