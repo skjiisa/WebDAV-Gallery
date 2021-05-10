@@ -15,52 +15,23 @@ struct ImageView: View {
     
     var file: WebDAVFile
     
-    @State private var startedFetch = false
-    @State private var finishedFetch = false
-    @State private var image: UIImage?
+    @StateObject private var imageLoader = ImageLoader()
     
     var body: some View {
         ZStack {
-            if let image = image {
+            if let image = imageLoader.image {
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFit()
             }
             
-            if startedFetch && !finishedFetch {
+            if !imageLoader.done {
                 ProgressView()
             }
         }
         .navigationTitle(file.name)
         .onAppear {
-            if !startedFetch {
-                startedFetch = true
-                
-                webDAVController.getImage(for: file, account: account, preview: .memoryOnly) { image, error in
-                    switch error {
-                    // Cached thumbnail returned
-                    case .placeholder:
-                        if self.image == nil {
-                            DispatchQueue.main.async {
-                                self.image = image
-                            }
-                        }
-                        
-                    // Full-size image fetched
-                    case .none:
-                        if let image = image {
-                            DispatchQueue.main.async {
-                                self.image = image
-                            }
-                        }
-                        self.finishedFetch = true
-                        
-                    // Error logged
-                    case .some(let unexpectedError):
-                        NSLog(unexpectedError.localizedDescription)
-                    }
-                }
-            }
+            imageLoader.load(file: file, webDAVController: webDAVController, account: account)
         }
     }
 }

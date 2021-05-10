@@ -7,9 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5901B5B8261413F900E4575A /* AlbumsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5901B5B7261413F900E4575A /* AlbumsView.swift */; };
 		59136F1725AE699400E7AD25 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 59136F1625AE699400E7AD25 /* KeychainSwift */; };
 		59136F1A25AE6BCE00E7AD25 /* Gallery+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59136F1925AE6BCE00E7AD25 /* Gallery+Convenience.swift */; };
 		591BA4DA25CA1E9E0014C2AA /* ScrollView+Fix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591BA4D925CA1E9E0014C2AA /* ScrollView+Fix.swift */; };
+		59242AF226411B1800477C49 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59242AF126411B1800477C49 /* File.swift */; };
+		59242AF42641220600477C49 /* FileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59242AF32641220600477C49 /* FileCell.swift */; };
+		59242AF6264122C800477C49 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59242AF5264122C800477C49 /* ImageLoader.swift */; };
 		5924325026127CEB0011B492 /* PathController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5924324F26127CEB0011B492 /* PathController.swift */; };
 		59342C0B25AD0817000BD333 /* GalleryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59342C0A25AD0817000BD333 /* GalleryApp.swift */; };
 		59342C0D25AD0817000BD333 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59342C0C25AD0817000BD333 /* ContentView.swift */; };
@@ -28,12 +32,20 @@
 		597B595425CDE8EF00D30ACE /* ZoomButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 597B595325CDE8EF00D30ACE /* ZoomButtons.swift */; };
 		597B595725CDEC9700D30ACE /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 597B595625CDEC9700D30ACE /* ImageView.swift */; };
 		599B60DA25CE0CFD00473A02 /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 599B60D925CE0CFD00473A02 /* Defaults.swift */; };
+		59A0D8912645C18A00E01E61 /* AlbumDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59A0D8902645C18A00E01E61 /* AlbumDetailView.swift */; };
+		59AE179E2644ABC600B33C9F /* AlbumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59AE179D2644ABC600B33C9F /* AlbumView.swift */; };
+		59AE17A02644B3E200B33C9F /* AlbumController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59AE179F2644B3E200B33C9F /* AlbumController.swift */; };
+		59AE17A22644BAF000B33C9F /* AddImageButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59AE17A12644BAF000B33C9F /* AddImageButton.swift */; };
 		59E3056225AE558B00BB855D /* AlertItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E3056125AE558B00BB855D /* AlertItem.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5901B5B7261413F900E4575A /* AlbumsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumsView.swift; sourceTree = "<group>"; };
 		59136F1925AE6BCE00E7AD25 /* Gallery+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gallery+Convenience.swift"; sourceTree = "<group>"; };
 		591BA4D925CA1E9E0014C2AA /* ScrollView+Fix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScrollView+Fix.swift"; sourceTree = "<group>"; };
+		59242AF126411B1800477C49 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
+		59242AF32641220600477C49 /* FileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileCell.swift; sourceTree = "<group>"; };
+		59242AF5264122C800477C49 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
 		5924324F26127CEB0011B492 /* PathController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathController.swift; sourceTree = "<group>"; };
 		59342C0725AD0817000BD333 /* Gallery.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gallery.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		59342C0A25AD0817000BD333 /* GalleryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryApp.swift; sourceTree = "<group>"; };
@@ -53,6 +65,10 @@
 		597B595325CDE8EF00D30ACE /* ZoomButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomButtons.swift; sourceTree = "<group>"; };
 		597B595625CDEC9700D30ACE /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
 		599B60D925CE0CFD00473A02 /* Defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
+		59A0D8902645C18A00E01E61 /* AlbumDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumDetailView.swift; sourceTree = "<group>"; };
+		59AE179D2644ABC600B33C9F /* AlbumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumView.swift; sourceTree = "<group>"; };
+		59AE179F2644B3E200B33C9F /* AlbumController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumController.swift; sourceTree = "<group>"; };
+		59AE17A12644BAF000B33C9F /* AddImageButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddImageButton.swift; sourceTree = "<group>"; };
 		59E3056125AE558B00BB855D /* AlertItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -113,9 +129,13 @@
 			children = (
 				59342C0C25AD0817000BD333 /* ContentView.swift */,
 				59342C2D25AD0951000BD333 /* FileBrowserView.swift */,
+				59242AF32641220600477C49 /* FileCell.swift */,
 				59342C2A25AD092A000BD333 /* SettingsView.swift */,
 				59342C3D25AD13B1000BD333 /* AccountView.swift */,
 				597B595625CDEC9700D30ACE /* ImageView.swift */,
+				5901B5B7261413F900E4575A /* AlbumsView.swift */,
+				59A0D8902645C18A00E01E61 /* AlbumDetailView.swift */,
+				59AE179D2644ABC600B33C9F /* AlbumView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -126,6 +146,8 @@
 				59342C1325AD0819000BD333 /* Persistence.swift */,
 				59342C4025AD1437000BD333 /* WebDAVController.swift */,
 				5924324F26127CEB0011B492 /* PathController.swift */,
+				59242AF5264122C800477C49 /* ImageLoader.swift */,
+				59AE179F2644B3E200B33C9F /* AlbumController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -137,6 +159,7 @@
 				59136F1925AE6BCE00E7AD25 /* Gallery+Convenience.swift */,
 				59342C3425AD0A83000BD333 /* Gallery+Wrapping.swift */,
 				599B60D925CE0CFD00473A02 /* Defaults.swift */,
+				59242AF126411B1800477C49 /* File.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -149,6 +172,7 @@
 				591BA4D925CA1E9E0014C2AA /* ScrollView+Fix.swift */,
 				597B595325CDE8EF00D30ACE /* ZoomButtons.swift */,
 				5964A9D42612ADB300DAB570 /* Animation+Push.swift */,
+				59AE17A12644BAF000B33C9F /* AddImageButton.swift */,
 			);
 			path = "Supplemental Views";
 			sourceTree = "<group>";
@@ -231,20 +255,28 @@
 			buildActionMask = 2147483647;
 			files = (
 				5964A9D52612ADB300DAB570 /* Animation+Push.swift in Sources */,
+				59AE179E2644ABC600B33C9F /* AlbumView.swift in Sources */,
 				597B595725CDEC9700D30ACE /* ImageView.swift in Sources */,
 				599B60DA25CE0CFD00473A02 /* Defaults.swift in Sources */,
 				59342C2B25AD092A000BD333 /* SettingsView.swift in Sources */,
+				59A0D8912645C18A00E01E61 /* AlbumDetailView.swift in Sources */,
 				59342C2E25AD0951000BD333 /* FileBrowserView.swift in Sources */,
+				59242AF226411B1800477C49 /* File.swift in Sources */,
 				59342C2825AD0892000BD333 /* Gallery.xcdatamodeld in Sources */,
+				5901B5B8261413F900E4575A /* AlbumsView.swift in Sources */,
 				59342C1425AD0819000BD333 /* Persistence.swift in Sources */,
+				59242AF42641220600477C49 /* FileCell.swift in Sources */,
 				59342C4125AD1437000BD333 /* WebDAVController.swift in Sources */,
 				59342C0D25AD0817000BD333 /* ContentView.swift in Sources */,
+				59AE17A02644B3E200B33C9F /* AlbumController.swift in Sources */,
 				597B595425CDE8EF00D30ACE /* ZoomButtons.swift in Sources */,
 				59342C0B25AD0817000BD333 /* GalleryApp.swift in Sources */,
 				5924325026127CEB0011B492 /* PathController.swift in Sources */,
 				59342C3E25AD13B1000BD333 /* AccountView.swift in Sources */,
+				59242AF6264122C800477C49 /* ImageLoader.swift in Sources */,
 				591BA4DA25CA1E9E0014C2AA /* ScrollView+Fix.swift in Sources */,
 				59136F1A25AE6BCE00E7AD25 /* Gallery+Convenience.swift in Sources */,
+				59AE17A22644BAF000B33C9F /* AddImageButton.swift in Sources */,
 				59342C3525AD0A83000BD333 /* Gallery+Wrapping.swift in Sources */,
 				59E3056225AE558B00BB855D /* AlertItem.swift in Sources */,
 				59342C3925AD0C90000BD333 /* TextWithCaption.swift in Sources */,

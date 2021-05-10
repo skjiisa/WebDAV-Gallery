@@ -16,45 +16,54 @@ struct ContentView: View {
     
     @StateObject private var webDAVController = WebDAVController()
     @StateObject private var pathController = PathController()
-    
-    @State private var showingSettings = false
+    @StateObject private var albumController = AlbumController()
     
     var body: some View {
-        Group {
-            if let account = accounts.first {
-                FileBrowserView(showingSettings: $showingSettings)
-                    .environmentObject(account)
-                    .environmentObject(pathController)
-            } else {
-                NavigationView {
-                    VStack {
-                        Text("Please add an account")
-                    }
-                    .navigationTitle("Gallery")
-                    .toolbar {
-                        Button {
-                            showingSettings = true
-                        } label: {
-                            Image(systemName: "gear")
-                                .imageScale(.large)
+        TabView {
+            // File Browser
+            Group {
+                if let account = accounts.first {
+                    FileBrowserView()
+                        .environmentObject(account)
+                        .environmentObject(pathController)
+                        .sheet(item: $pathController.file) { file in
+                            NavigationView {
+                                ImageView(file: file)
+                                    .environmentObject(webDAVController)
+                                    .environmentObject(account)
+                            }
                         }
+                } else {
+                    NavigationView {
+                        VStack {
+                            Text("Please add an account")
+                        }
+                        .navigationTitle("Gallery")
                     }
                 }
             }
-        }
-        .environmentObject(webDAVController)
-        .sheet(isPresented: $showingSettings) {
+            .tabItem {
+                Label("File Browser", systemImage: "folder.fill")
+            }
+            
+            // Albums
+            NavigationView {
+                AlbumsView()
+            }
+            .tabItem {
+                Label("Albums", systemImage: "photo.fill.on.rectangle.fill")
+            }
+            
+            // Settings
             NavigationView {
                 SettingsView()
-                    .toolbar {
-                        Button("Done") {
-                            showingSettings = false
-                        }
-                    }
             }
-            .environment(\.managedObjectContext, moc)
-            .environmentObject(webDAVController)
+            .tabItem {
+                Label("Settings", systemImage: "gear")
+            }
         }
+        .environmentObject(webDAVController)
+        .environmentObject(albumController)
     }
 }
 

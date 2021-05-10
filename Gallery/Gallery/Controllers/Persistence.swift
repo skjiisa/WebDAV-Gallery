@@ -8,6 +8,7 @@
 import CoreData
 
 struct PersistenceController {
+    
     static let shared = PersistenceController()
 
     static var preview: PersistenceController = {
@@ -56,4 +57,24 @@ struct PersistenceController {
             }
         })
     }
+    
+    //MARK: Saving
+    
+    /// Saves the container's viewContext if there are changes.
+    func save() {
+        PersistenceController.save(context: container.viewContext)
+    }
+    
+    /// Saves the given context if there are changes.
+    /// - Parameter context: The Core Data context to save.
+    static func save(context moc: NSManagedObjectContext) {
+        guard moc.hasChanges else { return }
+        do {
+            try moc.save()
+        } catch {
+            let nsError = error as NSError
+            NSLog("Error saving context: \(nsError), \(nsError.userInfo)")
+        }
+    }
+    
 }

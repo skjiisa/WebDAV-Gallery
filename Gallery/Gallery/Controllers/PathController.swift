@@ -6,11 +6,13 @@
 //
 
 import Foundation
+import WebDAV
 
 class PathController: ObservableObject {
     
     @Published var path: [String]
     @Published var paths: [String]
+    @Published var file: WebDAVFile?
     
     init() {
         path = ["/"]
@@ -31,5 +33,13 @@ class PathController: ObservableObject {
         guard !path.isEmpty else { return }
         path.removeLast()
         paths.removeLast()
+    }
+    
+    func select(file: WebDAVFile) {
+        self.file = file
+    }
+    
+    func close() {
+        file = nil
     }
 }
