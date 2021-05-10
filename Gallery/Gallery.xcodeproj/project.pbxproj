@@ -136,7 +136,6 @@
 				5901B5B7261413F900E4575A /* AlbumsView.swift */,
 				59A0D8902645C18A00E01E61 /* AlbumDetailView.swift */,
 				59AE179D2644ABC600B33C9F /* AlbumView.swift */,
-				59AE17A12644BAF000B33C9F /* AddImageButton.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -173,6 +172,7 @@
 				591BA4D925CA1E9E0014C2AA /* ScrollView+Fix.swift */,
 				597B595325CDE8EF00D30ACE /* ZoomButtons.swift */,
 				5964A9D42612ADB300DAB570 /* Animation+Push.swift */,
+				59AE17A12644BAF000B33C9F /* AddImageButton.swift */,
 			);
 			path = "Supplemental Views";
 			sourceTree = "<group>";

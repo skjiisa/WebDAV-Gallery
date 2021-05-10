@@ -29,7 +29,9 @@ struct AddImageButton: View {
                let imagePaths = albumController.imagePaths {
                 Button {
                     guard let account = account else { return }
-                    albumController.toggleInSelectedAlbum(file: image, account: account, context: moc)
+                    withAnimation {
+                        albumController.toggleInSelectedAlbum(file: image, account: account, context: moc)
+                    }
                 } label: {
                     if imagePaths.contains(image.path) {
                         Image(systemName: "minus.circle.fill")
