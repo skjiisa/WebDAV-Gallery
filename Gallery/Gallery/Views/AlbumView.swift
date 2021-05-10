@@ -27,7 +27,7 @@ struct AlbumView: View {
         self.album = album
         imagesFetchRequest = FetchRequest(
             entity: ImageItem.entity(),
-            sortDescriptors: [],
+            sortDescriptors: [NSSortDescriptor(keyPath: \ImageItem.index, ascending: true)],
             predicate: NSPredicate(format: "album == %@", album),
             animation: .default)
     }

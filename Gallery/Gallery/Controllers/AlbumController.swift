@@ -10,6 +10,8 @@ import WebDAV
 
 class AlbumController: ObservableObject {
     
+    //MARK: Properties
+    
     @Published var newAlbum: Album?
     @Published var selection: Album? {
         didSet {
@@ -17,6 +19,8 @@ class AlbumController: ObservableObject {
         }
     }
     @Published var imagePaths: Set<String>?
+    
+    //MARK: Public
     
     func delete(_ album: Album, context moc: NSManagedObjectContext) {
         if newAlbum == album {
@@ -40,14 +44,17 @@ class AlbumController: ObservableObject {
             // Remove existing image
             imagePaths?.remove(image.path)
             moc.delete(image)
-        } else if let webDAVFile = file as? WebDAVFile {
+            updateIndices(context: moc)
+        } else if let webDAVFile = file as? WebDAVFile,
+                  let count = imagePaths?.count {
             // Add new image
-            let image = ImageItem(file: webDAVFile, account: account, album: album, context: moc)
+            let image = ImageItem(file: webDAVFile, index: Int16(count + 1), account: account, album: album, context: moc)
             imagePaths?.insert(image.path)
         }
-        // Uncomment this once there's a way to properly edit Albums
         PersistenceController.save(context: moc)
     }
+    
+    //MARK: Private
     
     private func loadImages() {
         if let selection = selection,
@@ -56,6 +63,13 @@ class AlbumController: ObservableObject {
             print("Loaded images for \(selection.name ??? "Album").")
         } else {
             imagePaths = nil
+        }
+    }
+    
+    private func updateIndices(context moc: NSManagedObjectContext) {
+        guard let album = selection, let images = try? moc.fetch(album.imagesFetchRequest()) else { return }
+        for (index, item) in images.enumerated() where index != item.index {
+            item.index = Int16(index)
         }
     }
     
