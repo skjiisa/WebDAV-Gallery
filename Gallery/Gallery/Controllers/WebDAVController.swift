@@ -124,7 +124,7 @@ class WebDAVController: ObservableObject {
             completion(.invalidCredentials)
             return nil
         }
-        return webDAV.listFiles(atPath: path, account: account, password: password) { [weak self] files, error in
+        return webDAV.listFiles(atPath: path, account: account, password: password, caching: .requestEvenIfCached) { [weak self] files, error in
             if let files = files?.filter({ $0.isDirectory || WebDAVController.imageExtensions.contains($0.extension) }) {
                 let accountPath = AccountPath(account: account, path: path)
                 DispatchQueue.main.async {
