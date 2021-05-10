@@ -54,6 +54,14 @@ class AlbumController: ObservableObject {
         PersistenceController.save(context: moc)
     }
     
+    func move<S: Collection>(images: S, fromOffsets source: IndexSet, toOffset destination: Int) where S.Element == ImageItem, S.Index == Int {
+        var imageIndices = images.enumerated().map { $0.offset }
+        imageIndices.move(fromOffsets: source, toOffset: destination)
+        imageIndices.enumerated().compactMap { offset, element in
+            element != offset ? (image: images[element], newIndex: Int16(offset)) : nil
+        }.forEach { $0.image.index = $0.newIndex }
+    }
+    
     //MARK: Private
     
     private func loadImages() {
