@@ -14,6 +14,13 @@ struct FileBrowserView: View {
     
     //MARK: Properties
     
+    @FetchRequest(
+        entity: Account.entity(),
+        sortDescriptors: [NSSortDescriptor(key: "username", ascending: true)],
+        predicate: NSPredicate(format: "username != nil AND username != \"\" AND baseURL != nil AND baseURL != \"\""),
+        animation: .default)
+    private var accounts: FetchedResults<Account>
+    
     @EnvironmentObject private var webDAVController: WebDAVController
     @EnvironmentObject private var pathController: PathController
     
@@ -28,7 +35,7 @@ struct FileBrowserView: View {
     
     private var backGesture: some Gesture {
         DragGesture().onChanged { value in
-            guard pathController.path.count > 1 else { return }
+            guard pathController.depth > 1 else { return }
             if x == 0 && offset == 0 && value.location.x < 100 {
                 withAnimation(.interactiveSpring()) {
                     offset = 100
@@ -74,20 +81,37 @@ struct FileBrowserView: View {
                 .opacity(0)
                 .zIndex(1)
             
-            ForEach(Array(pathController.path.enumerated()), id: \.offset) { index, dir in
-                DirectoryView(directory: pathController.paths[index], title: dir == "/" ? "Gallery" : dir, numColumns: $numColumns)
-                    .transition(.move(edge: .trailing))
+            if let account = pathController.account,
+               let path = pathController.path[account],
+               let paths = pathController.paths[account] {
+                ForEach(Array(path.enumerated()), id: \.offset) { index, dir in
+                    DirectoryView(directory: paths[index], title: dir == "/" ? "Gallery" : dir, accounts: accounts, numColumns: $numColumns)
+                        .transition(.move(edge: .trailing))
+                }
+                .environmentObject(account)
+            } else {
+                NavigationView {
+                    VStack {
+                        Text("Please add an account")
+                    }
+                    .navigationTitle("Gallery")
+                }
             }
         }
         .gesture(backGesture)
         .overlay(backArrow.offset(x: x - width + offset))
+        .onAppear {
+            if pathController.account == nil {
+                pathController.account = accounts.first
+            }
+        }
     }
     
 }
 
 //MARK: DirectoryView
 
-struct DirectoryView: View {
+struct DirectoryView<C: RandomAccessCollection>: View where C.Element == Account {
     
     //MARK: Properties
     
@@ -97,6 +121,7 @@ struct DirectoryView: View {
     
     var directory: String
     var title: String
+    var accounts: C
     @Binding var numColumns: Int
     
     @State private var dataTask: URLSessionDataTask?
@@ -138,8 +163,29 @@ struct DirectoryView: View {
             .navigationTitle(title)
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
-                    ZoomButtons(numColumns: $numColumns)
-                        .padding(.trailing)
+                    HStack {
+                        Menu {
+                            // You'd think I could just use a Picker here,
+                            // but that didn't work for some reason.
+                            ForEach(accounts) { account in
+                                Button {
+                                    pathController.account = account
+                                } label: {
+                                    if pathController.account == account {
+                                        Label(account.username ?? "New Account", systemImage: "checkmark")
+                                    } else {
+                                        Text(account.username ?? "New Account")
+                                    }
+                                }
+                            }
+                        } label: {
+                            Label("Account", systemImage: "person.circle")
+                                .imageScale(.large)
+                        }
+
+                        ZoomButtons(numColumns: $numColumns)
+                            .padding(.trailing)
+                    }
                 }
                 ToolbarItem(placement: .navigation) {
                     if directory != "/" {
@@ -153,6 +199,11 @@ struct DirectoryView: View {
             }
         }
         .onAppear(perform: load)
+        .onChange(of: pathController.account) { account in
+            if account == self.account {
+                load()
+            }
+        }
     }
     
     //MARK: Functions

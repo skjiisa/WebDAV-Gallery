@@ -10,29 +10,37 @@ import WebDAV
 
 class PathController: ObservableObject {
     
-    @Published var path: [String]
-    @Published var paths: [String]
+    @Published var account: Account? {
+        didSet {
+            loadAccount()
+        }
+    }
+    @Published var path: [Account: [String]] = [:]
+    @Published var paths: [Account: [String]] = [:]
     @Published var file: WebDAVFile?
     
-    init() {
-        path = ["/"]
-        paths = ["/"]
+    var depth: Int {
+        guard let account = account,
+              let thisPath = path[account] else { return 0 }
+        return thisPath.count
     }
     
     func push(dir: String) {
-        if path.isEmpty {
-            path.append("/")
-            paths.append("/")
-        }
+        guard let account = account else { return }
+        loadAccount()
         
-        path.append(dir)
-        paths.append(path.dropFirst().joined(separator: "/"))
+        path[account]?.append(dir)
+        paths[account]?.append(path[account]!.dropFirst().joined(separator: "/"))
     }
     
     func back() {
-        guard !path.isEmpty else { return }
-        path.removeLast()
-        paths.removeLast()
+        guard let account = account else { return }
+        if path[account]?.count ?? 0 > 1 {
+            path[account]?.removeLast()
+            paths[account]?.removeLast()
+        } else {
+            self.account = nil
+        }
     }
     
     func select(file: WebDAVFile) {
@@ -41,5 +49,13 @@ class PathController: ObservableObject {
     
     func close() {
         file = nil
+    }
+    
+    private func loadAccount() {
+        guard let account = account else { return }
+        if (path[account] ?? []).isEmpty {
+            path[account] = ["/"]
+            paths[account] = ["/"]
+        }
     }
 }

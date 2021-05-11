@@ -22,25 +22,8 @@ struct ContentView: View {
         TabView {
             // File Browser
             Group {
-                if let account = accounts.first {
-                    FileBrowserView()
-                        .environmentObject(account)
-                        .environmentObject(pathController)
-                        .sheet(item: $pathController.file) { file in
-                            NavigationView {
-                                ImageView(file: file)
-                                    .environmentObject(webDAVController)
-                                    .environmentObject(account)
-                            }
-                        }
-                } else {
-                    NavigationView {
-                        VStack {
-                            Text("Please add an account")
-                        }
-                        .navigationTitle("Gallery")
-                    }
-                }
+                FileBrowserView()
+                    .environmentObject(pathController)
             }
             .tabItem {
                 Label("File Browser", systemImage: "folder.fill")
