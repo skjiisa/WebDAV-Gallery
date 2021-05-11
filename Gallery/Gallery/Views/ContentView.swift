@@ -24,6 +24,13 @@ struct ContentView: View {
             Group {
                 FileBrowserView()
                     .environmentObject(pathController)
+                    .sheet(item: $pathController.file) { accountFile in
+                        NavigationView {
+                            ImageView(file: accountFile.file)
+                                .environmentObject(webDAVController)
+                                .environmentObject(accountFile.account)
+                        }
+                    }
             }
             .tabItem {
                 Label("File Browser", systemImage: "folder.fill")

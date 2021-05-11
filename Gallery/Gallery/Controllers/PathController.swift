@@ -10,6 +10,15 @@ import WebDAV
 
 class PathController: ObservableObject {
     
+    struct AccountFile: Identifiable {
+        var account: Account
+        var file: WebDAVFile
+        
+        var id: String {
+            account.description + file.path
+        }
+    }
+    
     @Published var account: Account? {
         didSet {
             loadAccount()
@@ -17,7 +26,7 @@ class PathController: ObservableObject {
     }
     @Published var path: [Account: [String]] = [:]
     @Published var paths: [Account: [String]] = [:]
-    @Published var file: WebDAVFile?
+    @Published var file: AccountFile?
     
     var depth: Int {
         guard let account = account,
@@ -44,7 +53,8 @@ class PathController: ObservableObject {
     }
     
     func select(file: WebDAVFile) {
-        self.file = file
+        guard let account = account else { return }
+        self.file = AccountFile(account: account, file: file)
     }
     
     func close() {
