@@ -64,8 +64,11 @@ class PathController: ObservableObject {
     private func loadAccount() {
         guard let account = account else { return }
         if (path[account] ?? []).isEmpty {
-            path[account] = ["/"]
-            paths[account] = ["/"]
+            let array = account.defaultPathArray
+            path[account] = array
+            paths[account] = array.enumerated().map { n, _ in
+                array.dropFirst().dropLast(array.count - (n + 1)).joined(separator: "/") ??? "/"
+            }
         }
     }
 }

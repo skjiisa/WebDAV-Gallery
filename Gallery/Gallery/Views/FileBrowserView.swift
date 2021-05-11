@@ -115,6 +115,8 @@ struct DirectoryView<C: RandomAccessCollection>: View where C.Element == Account
     
     //MARK: Properties
     
+    @Environment(\.managedObjectContext) private var moc
+    
     @EnvironmentObject private var webDAVController: WebDAVController
     @EnvironmentObject private var pathController: PathController
     @EnvironmentObject private var account: Account
@@ -165,17 +167,26 @@ struct DirectoryView<C: RandomAccessCollection>: View where C.Element == Account
                 ToolbarItem(placement: .primaryAction) {
                     HStack {
                         Menu {
-                            // You'd think I could just use a Picker here,
-                            // but that didn't work for some reason.
-                            ForEach(accounts) { account in
-                                Button {
-                                    pathController.account = account
-                                } label: {
-                                    if pathController.account == account {
-                                        Label(account.username ?? "New Account", systemImage: "checkmark")
-                                    } else {
-                                        Text(account.username ?? "New Account")
+                            Section(header: Text("Account")) {
+                                // You'd think I could just use a Picker here,
+                                // but that didn't work for some reason.
+                                ForEach(accounts) { account in
+                                    Button {
+                                        pathController.account = account
+                                    } label: {
+                                        if pathController.account == account {
+                                            Label(account.username ?? "New Account", systemImage: "checkmark")
+                                        } else {
+                                            Text(account.username ?? "New Account")
+                                        }
                                     }
+                                }
+                            }
+                            
+                            Section(header: Text("Actions")) {
+                                Button("Make default directory for account") {
+                                    account.defaultPath = directory
+                                    PersistenceController.save(context: moc)
                                 }
                             }
                         } label: {

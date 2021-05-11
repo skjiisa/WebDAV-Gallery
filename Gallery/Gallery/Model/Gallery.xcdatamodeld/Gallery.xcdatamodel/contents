@@ -2,6 +2,7 @@
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="18154" systemVersion="20E232" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Account" representedClassName="Account" syncable="YES" codeGenerationType="class">
         <attribute name="baseURL" optional="YES" attributeType="String"/>
+        <attribute name="defaultPath" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="username" optional="YES" attributeType="String"/>
         <relationship name="images" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ImageItem" inverseName="account" inverseEntity="ImageItem"/>
@@ -18,7 +19,7 @@
         <relationship name="album" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Album" inverseName="images" inverseEntity="Album"/>
     </entity>
     <elements>
-        <element name="Account" positionX="-63" positionY="-18" width="128" height="89"/>
+        <element name="Account" positionX="-63" positionY="-18" width="128" height="104"/>
         <element name="Album" positionX="-63" positionY="9" width="128" height="59"/>
         <element name="ImageItem" positionX="-54" positionY="18" width="128" height="104"/>
     </elements>
