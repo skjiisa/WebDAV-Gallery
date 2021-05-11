@@ -99,7 +99,7 @@ struct DirectoryView: View {
     var title: String
     @Binding var numColumns: Int
     
-    @State private var fetchingFiles = false
+    @State private var dataTask: URLSessionDataTask?
     
     private var columns: [GridItem] {
         (0..<numColumns).map { _ in GridItem(spacing: 0) }
@@ -158,13 +158,8 @@ struct DirectoryView: View {
     //MARK: Functions
     
     private func load() {
-        if !fetchingFiles {
-            fetchingFiles = true
-            webDAVController.listSupportedFiles(atPath: directory, account: account) { error in
-                DispatchQueue.main.async {
-                    fetchingFiles = false
-                }
-            }
+        if dataTask?.state != .running {
+            dataTask = webDAVController.listSupportedFiles(atPath: directory, account: account)
         }
     }
 }

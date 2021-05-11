@@ -119,9 +119,9 @@ class WebDAVController: ObservableObject {
     }
     
     @discardableResult
-    func listSupportedFiles(atPath path: String, account: Account, completion: @escaping (_ error: WebDAVError?) -> Void) -> URLSessionDataTask? {
+    func listSupportedFiles(atPath path: String, account: Account, completion: ((_ error: WebDAVError?) -> Void)? = nil) -> URLSessionDataTask? {
         guard let password = getPassword(for: account) else {
-            completion(.invalidCredentials)
+            completion?(.invalidCredentials)
             return nil
         }
         return webDAV.listFiles(atPath: path, account: account, password: password, caching: .requestEvenIfCached) { [weak self] files, error in
@@ -141,7 +141,7 @@ class WebDAVController: ObservableObject {
                     }
                 }
             }
-            completion(error)
+            completion?(error)
         }
     }
     
