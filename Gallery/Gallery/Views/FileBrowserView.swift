@@ -25,13 +25,17 @@ struct FileBrowserView: View {
     @StateObject private var navigationController = NavigationController()
     
     @State private var numColumns: Int = 2
+    @State private var account: Account?
     
     //MARK: Body
     
     var body: some View {
         NavigationView {
-            if let account = accounts.first {
-                DirectoryView(directory: "/", title: "Gallery", accounts: accounts, numColumns: $numColumns)
+            if let account = account {
+                DirectoryView(directory: "/", title: "Gallery", accounts: accounts, account: account, numColumns: $numColumns) { account in
+                    navigationController.popToRoot(animated: false)
+                    self.account = account
+                }
                     .environmentObject(account)
             } else {
                 VStack {
@@ -41,6 +45,11 @@ struct FileBrowserView: View {
             }
         }
         .navigationController(navigationController)
+        .onAppear {
+            if account == nil {
+                account = accounts.first
+            }
+        }
     }
     
 }
@@ -55,12 +64,14 @@ struct DirectoryView<C: RandomAccessCollection>: View where C.Element == Account
     
     @EnvironmentObject private var webDAVController: WebDAVController
     @EnvironmentObject private var navigationController: NavigationController
-    @EnvironmentObject private var account: Account
+//    @EnvironmentObject private var account: Account
     
     var directory: String
     var title: String
     var accounts: C
+    var account: Account
     @Binding var numColumns: Int
+    var changeAccount: (Account) -> Void
     
     @State private var dataTask: URLSessionDataTask?
     
@@ -80,7 +91,7 @@ struct DirectoryView<C: RandomAccessCollection>: View where C.Element == Account
                                 .onTapGesture {
                                     navigationController.push(title: file.name) {
                                         if file.isDirectory {
-                                            DirectoryView(directory: file.path, title: file.name, accounts: accounts, numColumns: $numColumns)
+                                            DirectoryView(directory: file.path, title: file.name, accounts: accounts, account: account, numColumns: $numColumns, changeAccount: changeAccount)
                                                 .environmentObject(account)
                                         } else {
                                             ImageView(file: file)
@@ -109,13 +120,13 @@ struct DirectoryView<C: RandomAccessCollection>: View where C.Element == Account
                                 // but that didn't work for some reason.
                                 ForEach(accounts) { account in
                                     Button {
-//                                        pathController.account = account
+                                        changeAccount(account)
                                     } label: {
-//                                        if pathController.account == account {
-//                                            Label(account.username ?? "New Account", systemImage: "checkmark")
-//                                        } else {
+                                        if self.account == account {
+                                            Label(account.username ?? "New Account", systemImage: "checkmark")
+                                        } else {
                                             Text(account.username ?? "New Account")
-//                                        }
+                                        }
                                     }
                                 }
                             }
@@ -137,11 +148,6 @@ struct DirectoryView<C: RandomAccessCollection>: View where C.Element == Account
                 }
             }
         .onAppear(perform: load)
-//        .onChange(of: pathController.account) { account in
-//            if account == self.account {
-//                load()
-//            }
-//        }
     }
     
     //MARK: Functions

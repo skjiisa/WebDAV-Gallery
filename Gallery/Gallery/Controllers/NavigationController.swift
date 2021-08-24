@@ -19,6 +19,14 @@ class NavigationController: ObservableObject {
         vc.title = title
         nc.pushViewController(vc, animated: animated)
     }
+    
+    func pop(animated: Bool = true) {
+        uiNavigationController?.popViewController(animated: animated)
+    }
+    
+    func popToRoot(animated: Bool = true) {
+        uiNavigationController?.popToRootViewController(animated: animated)
+    }
 }
 
 extension NavigationView {
