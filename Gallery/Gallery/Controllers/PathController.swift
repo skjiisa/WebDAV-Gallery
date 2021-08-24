@@ -10,36 +10,65 @@ import WebDAV
 
 class PathController: ObservableObject {
     
-    @Published var path: [String]
-    @Published var paths: [String]
-    @Published var file: WebDAVFile?
+    struct AccountFile: Identifiable {
+        var account: Account
+        var file: WebDAVFile
+        
+        var id: String {
+            account.description + file.path
+        }
+    }
     
-    init() {
-        path = ["/"]
-        paths = ["/"]
+    @Published var account: Account? {
+        didSet {
+            loadAccount()
+        }
+    }
+    @Published var path: [Account: [String]] = [:]
+    @Published var paths: [Account: [String]] = [:]
+    @Published var file: AccountFile?
+    
+    var depth: Int {
+        guard let account = account,
+              let thisPath = path[account] else { return 0 }
+        return thisPath.count
     }
     
     func push(dir: String) {
-        if path.isEmpty {
-            path.append("/")
-            paths.append("/")
-        }
+        guard let account = account else { return }
+        loadAccount()
         
-        path.append(dir)
-        paths.append(path.dropFirst().joined(separator: "/"))
+        path[account]?.append(dir)
+        paths[account]?.append(path[account]!.dropFirst().joined(separator: "/"))
     }
     
     func back() {
-        guard !path.isEmpty else { return }
-        path.removeLast()
-        paths.removeLast()
+        guard let account = account else { return }
+        if path[account]?.count ?? 0 > 1 {
+            path[account]?.removeLast()
+            paths[account]?.removeLast()
+        } else {
+            self.account = nil
+        }
     }
     
     func select(file: WebDAVFile) {
-        self.file = file
+        guard let account = account else { return }
+        self.file = AccountFile(account: account, file: file)
     }
     
     func close() {
         file = nil
+    }
+    
+    private func loadAccount() {
+        guard let account = account else { return }
+        if (path[account] ?? []).isEmpty {
+            let array = account.defaultPathArray
+            path[account] = array
+            paths[account] = array.enumerated().map { n, _ in
+                array.dropFirst().dropLast(array.count - (n + 1)).joined(separator: "/") ??? "/"
+            }
+        }
     }
 }

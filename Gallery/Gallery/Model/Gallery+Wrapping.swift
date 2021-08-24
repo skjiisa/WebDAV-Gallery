@@ -8,7 +8,11 @@
 import Foundation
 import WebDAV
 
-extension Account: WebDAVAccount {}
+extension Account: WebDAVAccount {
+    var defaultPathArray: [String] {
+        ["/"] + (defaultPath?.split(separator: "/").map { String($0) } ?? [])
+    }
+}
 
 extension Album {
     var wrappedName: String {
@@ -20,8 +24,8 @@ extension Album {
 //MARK: Operators
 
 infix operator ???: NilCoalescingPrecedence
-extension String {
-    static func ??? (lhs: String?, rhs: String) -> String {
+extension Collection {
+    static func ??? (lhs: Self?, rhs: Self) -> Self {
         if let lhs = lhs,
            !lhs.isEmpty {
             return lhs
