@@ -107,14 +107,11 @@ class WebDAVController: ObservableObject {
         }
         
         webDAV.listFiles(atPath: "/", account: account, password: password) { [weak self] files, error in
-            switch error {
-            case .none:
-                guard let id = account.id else { break }
-                self?.keychain.set(password, forKey: id.uuidString)
-                self?.passwordCache[id] = password
-            default: break
-            }
-            completion(error)
+            guard files != nil, let id = account.id else { return completion(error ?? .unauthorized) }
+            self?.keychain.set(password, forKey: id.uuidString)
+            self?.passwordCache[id] = password
+            
+            completion(nil)
         }
     }
     

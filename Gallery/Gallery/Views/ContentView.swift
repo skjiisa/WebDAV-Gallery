@@ -10,12 +10,7 @@ import CoreData
 
 struct ContentView: View {
     
-    @Environment(\.managedObjectContext) private var moc
-    @FetchRequest(entity: Account.entity(), sortDescriptors: [NSSortDescriptor(key: "username", ascending: true)])
-    private var accounts: FetchedResults<Account>
-    
     @StateObject private var webDAVController = WebDAVController()
-    @StateObject private var pathController = PathController()
     @StateObject private var albumController = AlbumController()
     
     var body: some View {
@@ -23,14 +18,6 @@ struct ContentView: View {
             // File Browser
             Group {
                 FileBrowserView()
-                    .environmentObject(pathController)
-                    .sheet(item: $pathController.file) { accountFile in
-                        NavigationView {
-                            ImageView(file: accountFile.file)
-                                .environmentObject(webDAVController)
-                                .environmentObject(accountFile.account)
-                        }
-                    }
             }
             .tabItem {
                 Label("File Browser", systemImage: "folder.fill")

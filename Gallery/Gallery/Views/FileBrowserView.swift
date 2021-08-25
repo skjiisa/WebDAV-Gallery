@@ -22,87 +22,32 @@ struct FileBrowserView: View {
     private var accounts: FetchedResults<Account>
     
     @EnvironmentObject private var webDAVController: WebDAVController
-    @EnvironmentObject private var pathController: PathController
+    @StateObject private var navigationController = NavigationController()
     
     @State private var numColumns: Int = 2
-    
-    @State private var offset: CGFloat = 0.0
-    @State private var x: CGFloat = 0.0
-    
-    //MARK: Views
-    
-    let width = UIScreen.main.bounds.width
-    
-    private var backGesture: some Gesture {
-        DragGesture().onChanged { value in
-            guard pathController.depth > 1 else { return }
-            if x == 0 && offset == 0 && value.location.x < 100 {
-                withAnimation(.interactiveSpring()) {
-                    offset = 100
-                }
-            } else {
-                x = min(value.translation.width, width/2 - offset)
-            }
-        }.onEnded { value in
-            // -8 to add some leniency
-            if x + offset > width/2 - 8 {
-                withAnimation(.push) {
-                    pathController.back()
-                }
-            }
-            withAnimation(.spring()) {
-                x = 0
-                offset = 0
-            }
-        }
-    }
-    
-    private var backArrow: some View {
-        Circle()
-            .foregroundColor(Color(.separator))
-            .frame(width: 100, height: 100)
-            .overlay(
-                Image(systemName: "arrow.backward")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .offset(x: 25)
-                    .frame(width: 40)
-                    .foregroundColor(.white)
-            )
-    }
+    @State private var account: Account?
     
     //MARK: Body
     
     var body: some View {
-        ZStack {
-            // This exists because otherwise the .transition doesn't play on the way out
-            // See https://sarunw.com/posts/how-to-fix-zstack-transition-animation-in-swiftui/
-            Text("A")
-                .opacity(0)
-                .zIndex(1)
-            
-            if let account = pathController.account,
-               let path = pathController.path[account],
-               let paths = pathController.paths[account] {
-                ForEach(Array(path.enumerated()), id: \.offset) { index, dir in
-                    DirectoryView(directory: paths[index], title: dir == "/" ? "Gallery" : dir, accounts: accounts, numColumns: $numColumns)
-                        .transition(.move(edge: .trailing))
+        NavigationView {
+            if let account = account {
+                DirectoryView(directory: "/", title: "Gallery", accounts: accounts, account: account, numColumns: $numColumns) { account in
+                    navigationController.popToRoot(animated: false)
+                    self.account = account
                 }
-                .environmentObject(account)
+                    .environmentObject(account)
             } else {
-                NavigationView {
-                    VStack {
-                        Text("Please add an account")
-                    }
-                    .navigationTitle("Gallery")
+                VStack {
+                    Text("Please add an account")
                 }
+                .navigationTitle("Gallery")
             }
         }
-        .gesture(backGesture)
-        .overlay(backArrow.offset(x: x - width + offset))
+        .navigationController(navigationController)
         .onAppear {
-            if pathController.account == nil {
-                pathController.account = accounts.first
+            if account == nil {
+                account = accounts.first
             }
         }
     }
@@ -118,13 +63,15 @@ struct DirectoryView<C: RandomAccessCollection>: View where C.Element == Account
     @Environment(\.managedObjectContext) private var moc
     
     @EnvironmentObject private var webDAVController: WebDAVController
-    @EnvironmentObject private var pathController: PathController
-    @EnvironmentObject private var account: Account
+    @EnvironmentObject private var navigationController: NavigationController
+//    @EnvironmentObject private var account: Account
     
     var directory: String
     var title: String
     var accounts: C
+    var account: Account
     @Binding var numColumns: Int
+    var changeAccount: (Account) -> Void
     
     @State private var dataTask: URLSessionDataTask?
     
@@ -135,7 +82,6 @@ struct DirectoryView<C: RandomAccessCollection>: View where C.Element == Account
     //MARK: Body
     
     var body: some View {
-        NavigationView {
             ScrollView(.vertical) {
                 if let files = webDAVController.files(for: account, at: directory) {
                     LazyVGrid(columns: columns) {
@@ -143,12 +89,14 @@ struct DirectoryView<C: RandomAccessCollection>: View where C.Element == Account
                             FileCell(file, account: account)
                                 .addImageButton(image: file, numColumns: numColumns)
                                 .onTapGesture {
-                                    if file.isDirectory {
-                                        withAnimation(.push) {
-                                            pathController.push(dir: file.fileName)
+                                    navigationController.push(title: file.name) {
+                                        if file.isDirectory {
+                                            DirectoryView(directory: file.path, title: file.name, accounts: accounts, account: account, numColumns: $numColumns, changeAccount: changeAccount)
+                                                .environmentObject(account)
+                                        } else {
+                                            ImageView(file: file)
+                                                .environmentObject(account)
                                         }
-                                    } else {
-                                        pathController.select(file: file)
                                     }
                                 }
                         }
@@ -172,9 +120,9 @@ struct DirectoryView<C: RandomAccessCollection>: View where C.Element == Account
                                 // but that didn't work for some reason.
                                 ForEach(accounts) { account in
                                     Button {
-                                        pathController.account = account
+                                        changeAccount(account)
                                     } label: {
-                                        if pathController.account == account {
+                                        if self.account == account {
                                             Label(account.username ?? "New Account", systemImage: "checkmark")
                                         } else {
                                             Text(account.username ?? "New Account")
@@ -198,23 +146,8 @@ struct DirectoryView<C: RandomAccessCollection>: View where C.Element == Account
                             .padding(.trailing)
                     }
                 }
-                ToolbarItem(placement: .navigation) {
-                    if directory != "/" {
-                        Button("Back") {
-                            withAnimation(.push) {
-                                pathController.back()
-                            }
-                        }
-                    }
-                }
             }
-        }
         .onAppear(perform: load)
-        .onChange(of: pathController.account) { account in
-            if account == self.account {
-                load()
-            }
-        }
     }
     
     //MARK: Functions
@@ -238,6 +171,5 @@ struct FileBrowserView_Previews: PreviewProvider {
         .environment(\.managedObjectContext, moc)
         .environmentObject(WebDAVController())
         .environmentObject(Account(context: moc))
-        .environmentObject(PathController())
     }
 }
